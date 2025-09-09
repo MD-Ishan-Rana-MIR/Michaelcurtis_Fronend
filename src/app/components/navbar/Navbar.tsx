@@ -37,10 +37,10 @@ const Navbar = () => {
           <div className="font-bold text-xl">
             <Link href="/">
               <Image
-                src="/images/logo/logo.png"
+                src="/images/logo/logo-1.png"
                 width={1000}
                 height={1000}
-                className="w-[200px] md:w-[260px] lg:w-[349px]"
+                className="w-[200px] md:w-[260px] lg:w-[349px]  "
                 alt="logo"
                 priority
               />
