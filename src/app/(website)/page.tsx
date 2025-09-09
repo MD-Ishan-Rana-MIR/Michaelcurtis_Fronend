@@ -1,12 +1,12 @@
 import React from 'react'
-import Banner from '../pages/home-page/Banner'
+import HomePage from '../pages/home-page/HomePage'
 
-const HomePage: React.FC = () => {
+const Page: React.FC = () => {
     return (
         <div>
-            <Banner></Banner>
+            <HomePage></HomePage>
         </div>
     )
 }
 
-export default HomePage
+export default Page
