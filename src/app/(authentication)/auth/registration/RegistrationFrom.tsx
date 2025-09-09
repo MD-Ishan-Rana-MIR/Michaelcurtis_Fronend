@@ -50,7 +50,7 @@ export default function RegistrationForm() {
                                     Welcome back!
                                 </h1>
                                 <p className="lg:mt-4 mt-2 font-normal text-[#697079] text-[16px]">
-                                    Please enter the below information to log in.
+                                    Give us some information to create the account.
                                 </p>
                             </div>
 
