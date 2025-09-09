@@ -127,3 +127,10 @@
 .footerTextColor {
   color: #697079;
 }
+.btnColor {
+  background-color: #d09a40;
+}
+.btnColor:hover {
+  background-color: #946d2d;
+  transition: all;
+}
