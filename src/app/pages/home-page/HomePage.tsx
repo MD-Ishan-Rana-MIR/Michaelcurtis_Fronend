@@ -3,6 +3,7 @@ import Banner from './Banner'
 import Category from './Category'
 import TopInsurance from './TopInsurance'
 import Review from './Review'
+import WriteReview from './WriteReview'
 
 const HomePage: React.FC = () => {
     return (
@@ -11,6 +12,7 @@ const HomePage: React.FC = () => {
             <Category></Category>
             <TopInsurance></TopInsurance>
             <Review></Review>
+            <WriteReview></WriteReview>
         </div>
     )
 }
