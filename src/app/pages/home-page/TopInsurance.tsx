@@ -2,7 +2,6 @@
 
 import React from "react";
 import MaxWidth from "@/app/components/max-width/MaxWidth";
-import { Button } from "@/components/ui/button";
 import { InsuranceCard, Insurer } from "@/app/components/home/InsuranceCard";
 
 const TopInsurance = () => {
