@@ -32,7 +32,7 @@ const Navbar = () => {
   return (
     <div className=" sticky top-0 bg-[#FFFFFF] z-50 border-b-[2px] border-[#989DA3] ">
       <MaxWidth>
-        <div className="flex items-center justify-between gap-x-7 py-1  ">
+        <div className="flex items-center justify-between gap-x-7 py-1   ">
           {/* Logo */}
           <div className="font-bold text-xl">
             <Link href="/">
@@ -81,7 +81,7 @@ const Navbar = () => {
 
             {/* Join button */}
             <div className="hidden md:block  ">
-              <Link href="/join">
+              <Link href="/auth/login">
                 <button className="px-6 py-2 text-white rounded-[34px] bg-[#D09A40] text-xl font-normal cursor-pointer ">
                   Join/Login
                 </button>
