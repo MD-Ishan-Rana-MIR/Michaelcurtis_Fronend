@@ -1,9 +1,12 @@
 import React from 'react'
+import ProviderBanner from './ProviderBanner'
 
-const page = () => {
+const Page: React.FC = () => {
   return (
-    <div>page</div>
+    <div>
+      <ProviderBanner></ProviderBanner>
+    </div>
   )
 }
 
-export default page
+export default Page

@@ -1,9 +1,14 @@
 import React from 'react'
+import PolicyBanner from './PolicyBanner'
+import MostReview from './MostReview'
 
-const Policies = () => {
+const Page: React.FC = () => {
     return (
-        <div>Policies</div>
+        <div>
+            <PolicyBanner></PolicyBanner>
+            <MostReview></MostReview>
+        </div>
     )
 }
 
-export default Policies
+export default Page
