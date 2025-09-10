@@ -3,6 +3,7 @@
 import React from "react";
 import MaxWidth from "@/app/components/max-width/MaxWidth";
 import { InsuranceCard, Insurer } from "@/app/components/home/InsuranceCard";
+import Link from "next/link";
 
 const TopInsurance = () => {
     const insurers: Insurer[] = [
@@ -134,15 +135,14 @@ const TopInsurance = () => {
                     </div>
 
                     <div className="mt-6 flex justify-center">
-                        {!showAll ? (
+                        <Link href={"/providers"}>
+
                             <button onClick={() => setShowAll(true)} className="  cursor-pointer border border-[#D09A40] py-3 px-6 rounded-[26px] text-[#D09A40] font-medium ">
                                 View All Providers
                             </button>
-                        ) : (
-                            <button onClick={() => setShowAll(false)} className=" cursor-pointer  border border-[#D09A40] py-3 px-6 rounded-[26px] text-[#D09A40] font-medium ">
-                                Show less
-                            </button>
-                        )}
+
+                        </Link>
+
                     </div>
                 </div>
             </MaxWidth>
