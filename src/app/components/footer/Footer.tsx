@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Footer() {
     return (
-        <footer className="">
+        <footer className="lg:mt-10 mt-5">
             <MaxWidth>
                 <div className="flex flex-wrap justify-between gap-x-8 ">
 
