@@ -1,4 +1,3 @@
-import MaxWidth from '@/app/components/max-width/MaxWidth'
 import React from 'react'
 
 const AboutBanner = () => {
