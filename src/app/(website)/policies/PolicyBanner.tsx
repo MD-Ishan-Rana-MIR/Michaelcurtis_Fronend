@@ -10,7 +10,6 @@ type Policy = {
     title: string;
     description: string;
     image: string;
-    link: string;
 };
 
 const PolicyBanner = () => {
@@ -30,7 +29,7 @@ const PolicyBanner = () => {
             description:
                 "Protection for your vehicle against accidents, theft, and liability. Learn about coverage types, state requirements, and how to choose the right policy.",
             image: "/images/policy/car.svg",
-            link: "#",
+
         },
         {
             id: 2,
@@ -38,7 +37,7 @@ const PolicyBanner = () => {
             description:
                 "Covers medical expenses, preventive care, and emergencies. Understand your plan options, benefits, and how to pick the right coverage.",
             image: "/images/policy/car.svg",
-            link: "#",
+
         },
         {
             id: 3,
@@ -46,7 +45,7 @@ const PolicyBanner = () => {
             description:
                 "Protects your home and belongings from damage, theft, and disasters. Learn about different coverage options and how to save on premiums.",
             image: "/images/policy/car.svg",
-            link: "#",
+
         },
         {
             id: 4,
@@ -54,7 +53,7 @@ const PolicyBanner = () => {
             description:
                 "Safeguards you against trip cancellations, lost luggage, and medical emergencies abroad. Discover what to look for in a policy.",
             image: "/images/policy/car.svg",
-            link: "#",
+
         },
         {
             id: 5,
@@ -62,7 +61,7 @@ const PolicyBanner = () => {
             description:
                 "Ensures financial protection for your family. Learn about term, whole, and universal life policies to make the right choice.",
             image: "/images/policy/car.svg",
-            link: "#",
+
         },
     ];
 
@@ -101,11 +100,11 @@ const PolicyBanner = () => {
             <div className=' bg-[#f9fafb] lg:pt-14 pt-7 lg:pb-10 pb-5 ' >
                 <MaxWidth>
 
-                    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+                    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 mx-auto justify-center  ">
                         {policies.map((policy) => (
                             <div
                                 key={policy.id}
-                                className="w-[387px] bg-white shadow shadow-[#00000040] pt-16 pb-10 px-9 rounded-[10px] mx-auto"
+                                className=" bg-white shadow shadow-[#00000040]  pt-16 pb-10 px-9 rounded-[10px] mx-auto  "
                             >
                                 <div>
                                     <Image
@@ -127,10 +126,10 @@ const PolicyBanner = () => {
                                     </p>
                                 </div>
                                 <div className="lg:mt-5 mt-2">
-                                    <Link href={policy.link}>
-                                        <button className="flex items-center lg:text-xl text-[#D09A40] font-normal text-xs gap-x-5">
+                                    <Link className=' cursor-pointer' href={`/policy-details/${policy?.id}`}>
+                                        <button className="flex items-center lg:text-xl text-[#D09A40] font-normal text-xs gap-x-5 cursor-pointer ">
                                             Learn More{" "}
-                                            <span className="block mt-1">
+                                            <span className="block mt-1 cursor-pointer ">
                                                 <svg
                                                     width="24"
                                                     height="24"
