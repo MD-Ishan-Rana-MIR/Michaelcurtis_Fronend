@@ -1,10 +1,12 @@
 import React from 'react'
-import BlogBanner from './BlogBanner'
+import BlogDetails from './BlogDetails'
+import MoreBlog from './MoreBlog'
 
 const Page: React.FC = () => {
     return (
         <div className=' bg-[#f9fafb] ' >
-            <BlogBanner></BlogBanner>
+            <BlogDetails></BlogDetails>
+            <MoreBlog></MoreBlog>
         </div>
     )
 }

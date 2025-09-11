@@ -22,7 +22,7 @@ export default function Footer() {
                                 priority
                             />
                         </Link>
-                        <p className="mt-4 text-gray-600 text-sm sm:text-base md:text-lg ml-5 leading-relaxed">
+                        <p className="mt-4 text-gray-600 text-sm sm:text-base md:text-lg  leading-relaxed">
                             Transparent insurance reviews powered <br />
                             by our community of real customers.
                         </p>
