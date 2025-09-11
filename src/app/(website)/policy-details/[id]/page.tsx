@@ -1,10 +1,16 @@
 import React from 'react'
 import PolicyDetailsBanner from './PolicyDetailsBanner';
+import PolicyDetails from './PolicyDetails';
+import PolicyTopInsurance from './PolicyTopInsurance';
+import PolicyCategory from './PolicyCategory';
 
 const Page: React.FC = () => {
     return (
-        <div>
+        <div className=' bg-[#f9fafb] ' >
             <PolicyDetailsBanner></PolicyDetailsBanner>
+            <PolicyDetails></PolicyDetails>
+            <PolicyTopInsurance></PolicyTopInsurance>
+            <PolicyCategory></PolicyCategory>
         </div>
     )
 }
