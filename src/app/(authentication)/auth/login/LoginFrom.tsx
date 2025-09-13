@@ -104,7 +104,7 @@ export default function LoginForm() {
                                         />
                                         <span className="ml-2 text-sm">Remember me</span>
                                     </label>
-                                    <a href="#" className="text-sm text-[#D09A40] hover:underline">Forgot password?</a>
+                                    <Link href="/auth/email-verify" className="text-sm text-[#D09A40] hover:underline">Forgot password?</Link>
                                 </div>
 
                                 {/* Submit Button */}
