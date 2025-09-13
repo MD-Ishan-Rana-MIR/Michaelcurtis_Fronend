@@ -67,17 +67,18 @@ const Navbar = () => {
 
           {/* About & Join buttons */}
           <div className="flex flex-row gap-x-8">
+
             <div className="hidden md:block">
-              <Link href="/about">
-                <button className="border border-[#B5B5B5] text-[#000000] cursor-pointer px-6 py-2 rounded-[34px] text-xl font-normal">
-                  About
+              <Link href="/auth/login">
+                <button className="px-6 py-2 text-black border border-[#B5B5B5] rounded-[34px]  text-xl font-normal cursor-pointer">
+                  Login
                 </button>
               </Link>
             </div>
             <div className="hidden md:block">
-              <Link href="/auth/login">
+              <Link href="/auth/sign-up">
                 <button className="px-6 py-2 text-white rounded-[34px] bg-[#D09A40] text-xl font-normal cursor-pointer">
-                  Join/Login
+                  Sign Up
                 </button>
               </Link>
             </div>
