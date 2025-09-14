@@ -3,6 +3,7 @@ import MaxWidth from '@/app/components/max-width/MaxWidth'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const DetailsBanner = () => {
@@ -13,6 +14,11 @@ const DetailsBanner = () => {
         { label: "Coverage", value: 4.8, color: "bg-green-500" },
         { label: "Digital Tools", value: 4.8, color: "bg-green-500" },
     ];
+    const router = useRouter();
+    const handleReview = () => {
+        router.push("/specify-insurance-review")
+
+    }
     return (
         <>
             <div className=' bg-[#faf5ec] py-5 lg:py-10 ' >
@@ -61,8 +67,8 @@ const DetailsBanner = () => {
 
                         {/* review button  */}
                         <div>
-                            <Link href={""}>
-                                <button className=' lg:text-xl text-xs font-normal text-white border border-[#D09A40] bg-[#D09A40] py-2 px-5 rounded-[26px]  ' >Write a Review</button>
+                            <Link href={"/specify-insurance-review"}>
+                                <button className=' cursor-pointer lg:text-xl text-xs font-normal text-white border border-[#D09A40] bg-[#D09A40] py-2 px-5 rounded-[26px]  ' >Write a Review</button>
                             </Link>
                         </div>
                     </div>
@@ -346,7 +352,7 @@ const DetailsBanner = () => {
 
 
 
-                    <button className="block mx-auto rounded-[8px] bg-[#D09A40] py-2 px-5 text-white font-medium hover:bg-[#b68434] transition lg:mt-4 mt-2 cursor-pointer " >
+                    <button onClick={handleReview} className="block mx-auto rounded-[8px] bg-[#D09A40] py-2 px-5 text-white font-medium hover:bg-[#b68434] transition lg:mt-4 mt-2 cursor-pointer " >
 
                         Write a Review
 
