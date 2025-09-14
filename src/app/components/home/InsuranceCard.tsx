@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star } from "lucide-react";
 import CompareCard from "./CompareCard";
+import Link from "next/link";
 
 // ----- TYPES (scores are individual fields) -----
 export type ScoreKey =
@@ -223,9 +224,9 @@ export function InsuranceCard({ data }: { data: Insurer }) {
                             className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                             asChild
                         >
-                            <a href={data.profileHref ?? "#"}>
+                            <Link href={`/insurance-profile/${data?.id}`}>
                                 View Profile <ArrowRight className="ml-1 h-4 w-4" />
-                            </a>
+                            </Link>
                         </Button>
                     </div>
                 </CardContent>
