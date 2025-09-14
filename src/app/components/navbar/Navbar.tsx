@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import MaxWidth from "../max-width/MaxWidth";
 import Image from "next/image";
@@ -8,15 +8,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Navbar = () => {
-  const pathname = usePathname(); // Get current URL path
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false); // Mobile sidebar
+  const [profileOpen, setProfileOpen] = useState(false); // Profile menu
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulated login
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
-    { name: "", id: "home", href: "/" },
-    { name: "Rankings", id: "rankings", href: "/rankings" },
-    { name: "Providers", id: "providers", href: "/providers" },
-    { name: "Policies", id: "policies", href: "/policies" },
-    { name: "Blog", id: "blog", href: "/blog" },
+    { name: "Home", href: "/" },
+    { name: "Rankings", href: "/rankings" },
+    { name: "Providers", href: "/providers" },
+    { name: "Policies", href: "/policies" },
+    { name: "Blog", href: "/blog" },
   ];
 
   useEffect(() => {
@@ -27,8 +30,24 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileRef]);
+
   return (
-    <div className="sticky top-0 bg-[#FFFFFF] z-50 border-b-[2px]">
+    <div className="sticky top-0 bg-white z-50 border-b-[2px]">
       <MaxWidth>
         <div className="flex items-center justify-between gap-x-7 py-1">
           {/* Logo */}
@@ -36,24 +55,25 @@ const Navbar = () => {
             <Link href="/">
               <Image
                 src="/images/logo/logo-1.png"
-                width={1000}
-                height={1000}
-                className="w-[200px] md:w-[260px] lg:w-[349px]"
+                width={349}
+                height={100}
                 alt="logo"
-                priority
+                className="w-[200px] md:w-[260px] lg:w-[349px]"
               />
             </Link>
           </div>
 
-          {/* Nav menu (Desktop) */}
+          {/* Nav menu */}
           <div className="hidden md:flex space-x-8">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
-                  key={item.id}
+                  key={item.href}
                   href={item.href}
-                  className={`relative pb-2 cursor-pointer text-xl font-normal transition-colors duration-200 ${isActive ? "text-[#D09A40] font-semibold" : "text-black"
+                  className={`relative pb-2 cursor-pointer text-xl font-normal transition-colors duration-200 ${isActive
+                    ? "text-[#D09A40] font-semibold"
+                    : "text-black"
                     }`}
                 >
                   {item.name}
@@ -65,23 +85,62 @@ const Navbar = () => {
             })}
           </div>
 
-          {/* About & Join buttons */}
-          <div className="flex flex-row gap-x-8">
+          {/* Login/Profile & Sign Up */}
+          <div className="flex flex-row gap-x-4  relative" ref={profileRef}>
+            {isLoggedIn ? (
+              <div className="  " >
+                <button
+                  className="  "
+                  onClick={() => setProfileOpen(!profileOpen)}
+                >
+                  <Image src={"/images/insurance/user-img.svg"} width={61} height={61} alt="" className=" w-[64px] h-[64px] cursor-pointer border border-[#BD8C3A] p-1 rounded-full
+                   " />
+                </button>
 
-            <div className="hidden md:block">
-              <Link href="/auth/login">
-                <button className="px-6 py-2 text-black border border-[#B5B5B5] rounded-[34px]  text-xl font-normal cursor-pointer">
+                {/* Profile dropdown */}
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 hover:bg-gray-100 lg:text-xl text-sm font-normal  "
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      View Profile
+                    </Link>
+                    {/* <Link
+                      href="/change-password"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      Change Password
+                    </Link> */}
+                    <button
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 lg:text-xl text-sm font-normal "
+                      onClick={() => {
+                        setIsLoggedIn(false);
+                        setProfileOpen(false);
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <button
+                  className="px-6 py-2 text-black border border-gray-400 rounded-full"
+                  onClick={() => setIsLoggedIn(true)}
+                >
                   Login
                 </button>
-              </Link>
-            </div>
-            <div className="hidden md:block">
-              <Link href="/auth/sign-up">
-                <button className="px-6 py-2 text-white rounded-[34px] bg-[#D09A40] text-xl font-normal cursor-pointer">
-                  Sign Up
-                </button>
-              </Link>
-            </div>
+                <Link href="/auth/sign-up">
+                  <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full">
+                    Sign Up
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -93,7 +152,7 @@ const Navbar = () => {
         </div>
       </MaxWidth>
 
-      {/* Sidebar (Mobile) */}
+      {/* Mobile Sidebar */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 ${isOpen ? "translate-x-0" : "translate-x-full"
           }`}
@@ -105,35 +164,47 @@ const Navbar = () => {
           </button>
         </div>
         <div className="flex flex-col p-4 space-y-4">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`text-left text-gray-700 hover:text-black transition ${isActive ? "font-bold text-black" : ""
-                  }`}
-              >
-                {item.name}
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className="text-gray-700 hover:text-black"
+            >
+              {item.name}
+            </Link>
+          ))}
+          {isLoggedIn ? (
+            <>
+              <Link href="/profile">
+                <button className="bg-gray-100 w-full text-left px-4 py-2 rounded-lg">
+                  Profile
+                </button>
               </Link>
-            );
-          })}
-          <Link href="/join">
-            <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
-              Join
-            </button>
-          </Link>
+              <Link href="/change-password">
+                <button className="bg-gray-100 w-full text-left px-4 py-2 rounded-lg">
+                  Change Password
+                </button>
+              </Link>
+              <button
+                className="bg-gray-100 w-full text-left px-4 py-2 rounded-lg"
+                onClick={() => setIsLoggedIn(false)}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link href="/auth/login">
+              <button className="bg-black text-white w-full px-4 py-2 rounded-lg">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </div>
 
       {/* Overlay */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/40 z-40"
-        />
-      )}
+      {isOpen && <div onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/40 z-40" />}
     </div>
   );
 };
