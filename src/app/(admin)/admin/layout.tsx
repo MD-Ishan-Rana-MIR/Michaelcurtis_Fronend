@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <AdminNavbar />
 
                     {/* Page Content */}
-                    <main className="flex-1 pt-9 ml-10   overflow-y-auto">
+                    <main className="flex-1 pt-9 px-10 overflow-y-auto">
                         {children}
                     </main>
                 </div>

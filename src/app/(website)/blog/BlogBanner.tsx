@@ -182,7 +182,7 @@ const BlogBanner = () => {
                       Read Article
                       <span>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M4.5 12H19.5M19.5 12L13.875 6M19.5 12L13.875 18" stroke="#D09A40" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M4.5 12H19.5M19.5 12L13.875 6M19.5 12L13.875 18" stroke="#D09A40" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
 
                       </span>
@@ -256,7 +256,7 @@ const BlogBanner = () => {
                           Read Article
                           <span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M4.5 12H19.5M19.5 12L13.875 6M19.5 12L13.875 18" stroke="#D09A40" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                              <path d="M4.5 12H19.5M19.5 12L13.875 6M19.5 12L13.875 18" stroke="#D09A40" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
 
                           </span>
@@ -280,7 +280,7 @@ const BlogBanner = () => {
               >
                 <span>
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.843063 7.71114L6.50006 13.3681L7.91406 11.9541L2.96406 7.00414L7.91406 2.05414L6.50006 0.640137L0.843063 6.29714C0.655592 6.48466 0.550276 6.73897 0.550276 7.00414C0.550276 7.2693 0.655592 7.52361 0.843063 7.71114Z" fill="#1E1E1E" />
+                    <path fillRule="evenodd" clipRule="evenodd" d="M0.843063 7.71114L6.50006 13.3681L7.91406 11.9541L2.96406 7.00414L7.91406 2.05414L6.50006 0.640137L0.843063 6.29714C0.655592 6.48466 0.550276 6.73897 0.550276 7.00414C0.550276 7.2693 0.655592 7.52361 0.843063 7.71114Z" fill="#1E1E1E" />
                   </svg>
 
                 </span>
@@ -306,7 +306,7 @@ const BlogBanner = () => {
               >
                 <span>
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.15694 7.71114L1.49994 13.3681L0.0859375 11.9541L5.03594 7.00414L0.0859375 2.05414L1.49994 0.640137L7.15694 6.29714C7.34441 6.48466 7.44972 6.73897 7.44972 7.00414C7.44972 7.2693 7.34441 7.52361 7.15694 7.71114Z" fill="#1E1E1E" />
+                    <path fillRule="evenodd" clipRule="evenodd" d="M7.15694 7.71114L1.49994 13.3681L0.0859375 11.9541L5.03594 7.00414L0.0859375 2.05414L1.49994 0.640137L7.15694 6.29714C7.34441 6.48466 7.44972 6.73897 7.44972 7.00414C7.44972 7.2693 7.34441 7.52361 7.15694 7.71114Z" fill="#1E1E1E" />
                   </svg>
 
                 </span>
