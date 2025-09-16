@@ -1,9 +1,14 @@
 import React from 'react'
+import SendNotification from './SendNotification'
+import RecentNotification from './RecentNotification'
 
-const page = () => {
+const Page: React.FC = () => {
   return (
-    <div>page</div>
+    <div>
+      <SendNotification></SendNotification>
+      <RecentNotification></RecentNotification>
+    </div>
   )
 }
 
-export default page
+export default Page
