@@ -1,0 +1,137 @@
+import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
+
+type PolicyViewProps = {
+    policyViewModal: boolean;
+    setPolicyViewModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const PolicyView: React.FC<PolicyViewProps> = ({
+    policyViewModal,
+    setPolicyViewModal,
+}) => {
+    const modalRef = useRef<HTMLDivElement>(null);
+    const [showModal, setShowModal] = useState(false);
+
+    // Trigger open animation when modal mounts
+    useEffect(() => {
+        if (policyViewModal) {
+            const timer = setTimeout(() => setShowModal(true), 50); // slight delay for animation
+            return () => clearTimeout(timer);
+        }
+    }, [policyViewModal]);
+
+    // Close modal smoothly
+    const handleClose = () => {
+        setShowModal(false);
+        setTimeout(() => setPolicyViewModal(false), 500); // wait for animation to finish
+    };
+
+    // Close when clicked outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+                handleClose();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <>
+            {/* Backdrop */}
+            <div
+                className={`fixed inset-0  transition-opacity duration-500 ${showModal ? "opacity-100" : "opacity-0 pointer-events-none"
+                    }`}
+            />
+
+            {/* Modal */}
+            <div
+                ref={modalRef}
+                className={`fixed top-10 left-1/2 transform -translate-x-1/2 max-w-3xl w-full mx-4 bg-white shadow-lg rounded-lg pt-12 pb-6 px-12 transition-all duration-500 ease-out
+          ${showModal ? "translate-y-20 opacity-100 scale-100" : "-translate-y-40 opacity-0 scale-95"}`}
+            >
+                {/* Close Button */}
+                <button
+                    onClick={handleClose}
+                    className="absolute top-4 right-4 cursor-pointer text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                >
+                    ✕
+                </button>
+
+                <div>
+                    <div className=" flex items-center h-24  w-40 gap-x-7 " >
+                        <Image src={"/images/policy/car.svg"} width={127} height={45} alt="" className="" />
+                        <h1 className=" text-center text-[#000000] text-4xl font-normal  " >Auto Insurance</h1>
+                    </div>
+                    <div className=" mt-8 flex items-center gap-x-10 " >
+
+                        <h1 className=" text-lg font-normal  text-[#000000] " >Status</h1>
+                        <span className=" cursor-pointer " >
+                            <svg width="67" height="26" viewBox="0 0 67 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_411_3415)">
+                                    <rect width="67" height="26" rx="13" fill="#45E03C" />
+                                    <g filter="url(#filter0_d_411_3415)">
+                                        <circle cx="52.5" cy="13.5" r="9.5" fill="white" />
+                                    </g>
+                                </g>
+                                <defs>
+                                    <filter id="filter0_d_411_3415" x="35.7" y="-3.3" width="33.6" height="33.6" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                                        <feOffset />
+                                        <feGaussianBlur stdDeviation="3.65" />
+                                        <feComposite in2="hardAlpha" operator="out" />
+                                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_411_3415" />
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_411_3415" result="shape" />
+                                    </filter>
+                                    <clipPath id="clip0_411_3415">
+                                        <rect width="67" height="26" rx="13" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+
+                        </span>
+
+                    </div>
+                    <div className=" border border-[#989DA3] rounded-[9px] py-4 px-9 mt-7 " >
+                        <h1 className=" text-3xl font-normal " >What is Auto Insurance?</h1>
+
+                        <p className=" text-lg font-thin " >
+                            Auto insurance is a contract between you and an insurance company that protects you against financial loss in the event of an accident or theft. In exchange for your paying a premium, the insurance company agrees to pay your losses as outlined in your policy. It&apos;s designed to cover costs related to property damage, medical bills for injuries, and legal liabilities.
+                        </p>
+
+
+                        <h1 className=" text-3xl font-normal  mt-2 " >What&apos;s Covered (and What&apos;s Not)?</h1>
+                        <p className=" text-lg font-thin " >Standard auto policies are typically bundled with several types of coverage:</p>
+                        <ul className=" font-thin list-disc ml-6 " >
+                            <li>Liability Coverage: Pays for bodily injury and property damage you cause to others. This is required in most states.</li>
+                            <li>Collision Coverage: Pays for damage to your car resulting from a collision with another vehicle or object.</li>
+                            <li>
+                                Comprehensive Coverage: Covers damage to your car from non-collision events like theft, fire, or weather.
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+
+
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-4 mt-8">
+                    <button onClick={handleClose} className="flex items-center space-x-2 px-8 cursor-pointer py-3  text-[#D09A40] rounded-[36px] border border-[#D09A40] transition">
+                        <span>Cancel</span>
+                    </button>
+                    <button className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default PolicyView;

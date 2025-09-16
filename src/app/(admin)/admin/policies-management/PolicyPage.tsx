@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
+import PolicyView from "./PolicyView";
 
 interface ProviderType {
     id: number;
@@ -72,6 +73,20 @@ export default function ProvidersTable() {
 
         return matchesSearch && matchesPolicy && matchesStatus;
     });
+
+
+    // policy view modal 
+    const [policyViewModal, setPolicyViewModal] = useState<boolean>(false);
+
+    const openPolicyModal = () => {
+        setPolicyViewModal(true)
+    }
+
+
+
+
+
+
 
     return (
         <>
@@ -146,7 +161,7 @@ export default function ProvidersTable() {
                                 <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] ">
                                     Status
                                 </th>
-                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] text-center ">
+                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000]  ">
                                     Actions
                                 </th>
                             </tr>
@@ -174,7 +189,7 @@ export default function ProvidersTable() {
                                             <button className=" py-1 px-3.5 bg-[#C8FFD1] text-sm text-[#24983F] rounded-[4px] cursor-pointer " >Active</button>
                                         </td>
                                         <td className="px-4 py-2   flex flex-row items-center gap-x-3  ">
-                                            <button className=" cursor-pointer border border-[#989DA3] rounded-[6px] px-3 py-2 " ><svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <button onClick={openPolicyModal} className=" cursor-pointer border border-[#989DA3] rounded-[6px] px-3 py-2 " ><svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M2.275 12.296C1.425 11.192 1 10.639 1 9C1 7.36 1.425 6.809 2.275 5.704C3.972 3.5 6.818 1 11 1C15.182 1 18.028 3.5 19.725 5.704C20.575 6.81 21 7.361 21 9C21 10.64 20.575 11.191 19.725 12.296C18.028 14.5 15.182 17 11 17C6.818 17 3.972 14.5 2.275 12.296Z" stroke="#697079" />
                                                 <path d="M14 9C14 9.79565 13.6839 10.5587 13.1213 11.1213C12.5587 11.6839 11.7956 12 11 12C10.2044 12 9.44129 11.6839 8.87868 11.1213C8.31607 10.5587 8 9.79565 8 9C8 8.20435 8.31607 7.44129 8.87868 6.87868C9.44129 6.31607 10.2044 6 11 6C11.7956 6 12.5587 6.31607 13.1213 6.87868C13.6839 7.44129 14 8.20435 14 9Z" stroke="#697079" />
                                             </svg>
@@ -210,6 +225,14 @@ export default function ProvidersTable() {
                     </table>
                 </div>
             </div>
+
+            {
+                policyViewModal && (
+                    <PolicyView policyViewModal={policyViewModal} setPolicyViewModal={setPolicyViewModal} ></PolicyView>
+                )
+            }
+
+
         </>
     );
 }
