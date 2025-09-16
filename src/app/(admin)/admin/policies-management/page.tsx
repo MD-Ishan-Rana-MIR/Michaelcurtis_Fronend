@@ -1,9 +1,12 @@
 import React from 'react'
+import PolicyPage from './PolicyPage'
 
-const page = () => {
+const Page: React.FC = () => {
   return (
-    <div>page</div>
+    <div>
+      <PolicyPage></PolicyPage>
+    </div>
   )
 }
 
-export default page
+export default Page
