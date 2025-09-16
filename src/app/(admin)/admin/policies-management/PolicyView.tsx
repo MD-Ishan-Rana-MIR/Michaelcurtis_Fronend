@@ -23,10 +23,10 @@ const PolicyView: React.FC<PolicyViewProps> = ({
     }, [policyViewModal]);
 
     // Close modal
-    const handleClose = () => {
+    const handleClose = React.useCallback(() => {
         setShowModal(false);
         setTimeout(() => setPolicyViewModal(false), 500);
-    };
+    }, [setPolicyViewModal]);
 
     // Close on click outside
     useEffect(() => {
@@ -37,7 +37,7 @@ const PolicyView: React.FC<PolicyViewProps> = ({
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    }, [handleClose]);
 
     // Close on ESC and handle focus trap
     useEffect(() => {
@@ -67,7 +67,7 @@ const PolicyView: React.FC<PolicyViewProps> = ({
             setTimeout(() => firstFocusableRef.current?.focus(), 100);
         }
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [policyViewModal]);
+    }, [policyViewModal, handleClose]);
 
     return (
         <>
