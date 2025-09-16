@@ -1,0 +1,215 @@
+"use client";
+import Image from "next/image";
+import React, { useState } from "react";
+import { FiSearch } from "react-icons/fi";
+
+interface ProviderType {
+    id: number;
+    Category: string;
+    Description: string;
+    Last_Updated: string;
+    Status: string;
+}
+
+const initialProviders: ProviderType[] = [
+    {
+        id: 1,
+        Category: "Gloirepaluku",
+        Description: "California, Texas",
+        Last_Updated: "4.5",
+        Status: "Auto Insurance",
+    },
+    {
+        id: 2,
+        Category: "Virtue Insurance",
+        Description: "Florida, New York",
+        Last_Updated: "4.7",
+        Status: "Health Insurance",
+    },
+    {
+        id: 3,
+        Category: "Hope Coverage",
+        Description: "Texas, Nevada",
+        Last_Updated: "4.2",
+        Status: "Home Insurance",
+    },
+    {
+        id: 4,
+        Category: "Hope Coverage",
+        Description: "Texas, Nevada",
+        Last_Updated: "4.2",
+        Status: "Home Insurance",
+    },
+    {
+        id: 5,
+        Category: "Hope Coverage",
+        Description: "Texas, Nevada",
+        Last_Updated: "4.2",
+        Status: "Home Insurance",
+    },
+];
+
+export default function ProvidersTable() {
+    const [search, setSearch] = useState("");
+    const [policyFilter, setPolicyFilter] = useState("All");
+    const [statusFilter, setStatusFilter] = useState("All");
+
+    // 🔎 Filter logic
+    const filteredProviders = initialProviders.filter((p) => {
+        const matchesSearch = p.Category
+            .toLowerCase()
+            .includes(search.toLowerCase());
+
+        const matchesPolicy =
+            policyFilter === "All" ? true : p.Status === policyFilter;
+
+        const matchesStatus =
+            statusFilter === "All"
+                ? true
+                : statusFilter === "Sponsored"
+                    ? p.Status
+                    : !p.Description;
+
+        return matchesSearch && matchesPolicy && matchesStatus;
+    });
+
+    return (
+        <>
+            <div className=" bg-[#FAF5EC] pb-14 pt-5 px-8 shadow shadow-[#00000033] rounded-[12px] ">
+                <div className=" flex flex-row justify-between items-center " >
+                    <h1 className=" text-[27px] font-normal " >Status</h1>
+                    <button className=" cursor-pointer  flex flex-row items-center gap-x-2.5 py-2 px-5 border border-[#D09A40] bg-[#D09A40] rounded-[34px] text-xl font-normal text-white  " >
+                        <span>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 7.99805H8V12.998C8 13.2633 7.89464 13.5176 7.70711 13.7052C7.51957 13.8927 7.26522 13.998 7 13.998C6.73478 13.998 6.48043 13.8927 6.29289 13.7052C6.10536 13.5176 6 13.2633 6 12.998V7.99805H1C0.734784 7.99805 0.48043 7.89269 0.292893 7.70515C0.105357 7.51762 0 7.26326 0 6.99805C0 6.73283 0.105357 6.47848 0.292893 6.29094C0.48043 6.1034 0.734784 5.99805 1 5.99805H6V0.998047C6 0.73283 6.10536 0.478476 6.29289 0.29094C6.48043 0.103403 6.73478 -0.00195313 7 -0.00195312C7.26522 -0.00195313 7.51957 0.103403 7.70711 0.29094C7.89464 0.478476 8 0.73283 8 0.998047V5.99805H13C13.2652 5.99805 13.5196 6.1034 13.7071 6.29094C13.8946 6.47848 14 6.73283 14 6.99805C14 7.26326 13.8946 7.51762 13.7071 7.70515C13.5196 7.89269 13.2652 7.99805 13 7.99805Z" fill="white" />
+                            </svg>
+
+                        </span>
+                        Add New Policy Category
+                    </button>
+                </div>
+                {/* Search + Filters */}
+                <div className="flex  lflex-row justify-between gap-4 mb-8 mt-8 ">
+                    {/* Search bar */}
+                    <div className="flex items-center border border-[#B9B9B9] w-2xl rounded-[6px] px-3 py-2">
+                        <FiSearch className="text-gray-500 mr-2" />
+                        <input
+                            type="text"
+                            placeholder="Search provider..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full focus:outline-none bg-transparent"
+                        />
+                    </div>
+
+                    <div className=" flex items-center gap-x-6 " >
+                        {/* Policy Filter */}
+                        <select
+                            value={policyFilter}
+                            onChange={(e) => setPolicyFilter(e.target.value)}
+                            className="border border-[#B9B9B9]  rounded-[6px] px-3 py-2 text-[#686868] "
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Auto Insurance">Auto Insurance</option>
+                            <option value="Health Insurance">Health Insurance</option>
+                            <option value="Home Insurance">Home Insurance</option>
+                        </select>
+                        {/* Sponsored Filter */}
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="border border-[#B9B9B9]  rounded-[6px] px-3 py-2 text-[#686868] "
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Sponsored">Sponsored</option>
+                            <option value="Not Sponsored">Not Sponsored</option>
+                        </select>
+                    </div>
+
+
+                </div>
+
+                {/* Table */}
+                <div className="overflow-x-auto">
+                    <table className="w-full  divide-y divide-gray-200">
+                        <thead className="">
+                            <tr>
+                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] ">
+                                    Category
+                                </th>
+                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] ">
+                                    Description
+                                </th>
+                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] ">
+                                    Last Updated
+                                </th>
+                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] ">
+                                    Status
+                                </th>
+                                <th className="px-4 py-2 text-left  text-[16px] font-normal text-[#000000] text-center ">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#989DA3] pb-3 mb-3 ">
+                            {filteredProviders.length > 0 ? (
+                                filteredProviders.map((p) => (
+                                    <tr key={p.id}>
+                                        <td className="px-4 py-2 text-lg text-[#000000] font-normal pb-4 ">
+                                            <div className=" flex items-center gap-x-4 " >
+                                                <span>
+                                                    <Image src={"/images/policy/car.svg"} width={67} height={24} alt="" className="" />
+                                                </span>
+                                                <p>
+                                                    {p.Category}
+                                                </p>
+
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-2  text-[#000000] text-lg font-thin ">{p.Description}</td>
+                                        <td className="px-4 py-2  text-[#000000] text-lg font-thin ">
+                                            {p.Last_Updated}
+                                        </td>
+                                        <td className="px-4 py-2  text-[#000000] text-lg font-thin ">
+                                            <button className=" py-1 px-3.5 bg-[#C8FFD1] text-sm text-[#24983F] rounded-[4px] cursor-pointer " >Active</button>
+                                        </td>
+                                        <td className="px-4 py-2   flex flex-row items-center gap-x-3  ">
+                                            <button className=" cursor-pointer border border-[#989DA3] rounded-[6px] px-3 py-2 " ><svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M2.275 12.296C1.425 11.192 1 10.639 1 9C1 7.36 1.425 6.809 2.275 5.704C3.972 3.5 6.818 1 11 1C15.182 1 18.028 3.5 19.725 5.704C20.575 6.81 21 7.361 21 9C21 10.64 20.575 11.191 19.725 12.296C18.028 14.5 15.182 17 11 17C6.818 17 3.972 14.5 2.275 12.296Z" stroke="#697079" />
+                                                <path d="M14 9C14 9.79565 13.6839 10.5587 13.1213 11.1213C12.5587 11.6839 11.7956 12 11 12C10.2044 12 9.44129 11.6839 8.87868 11.1213C8.31607 10.5587 8 9.79565 8 9C8 8.20435 8.31607 7.44129 8.87868 6.87868C9.44129 6.31607 10.2044 6 11 6C11.7956 6 12.5587 6.31607 13.1213 6.87868C13.6839 7.44129 14 8.20435 14 9Z" stroke="#697079" />
+                                            </svg>
+                                            </button>
+                                            <button className=" cursor-pointer border border-[#989DA3] rounded-[6px] px-3 py-2 " >
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.533 9.14991C7.36388 9.31905 7.22976 9.51986 7.13831 9.74086C7.04685 9.96187 6.99985 10.1987 7 10.4379V12.9999H9.578C10.061 12.9999 10.525 12.8079 10.867 12.4659L18.467 4.86191C18.6365 4.69285 18.7709 4.49202 18.8627 4.27092C18.9544 4.04982 19.0016 3.81279 19.0016 3.57341C19.0016 3.33404 18.9544 3.09701 18.8627 2.87591C18.7709 2.65481 18.6365 2.45397 18.467 2.28491L17.716 1.53391C17.5469 1.36429 17.346 1.22971 17.1248 1.13788C16.9036 1.04605 16.6665 0.998779 16.427 0.998779C16.1875 0.998779 15.9504 1.04605 15.7292 1.13788C15.508 1.22971 15.3071 1.36429 15.138 1.53391L7.533 9.14991Z" stroke="#697079" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M19 10C19 14.243 19 16.364 17.682 17.682C16.364 19 14.242 19 10 19C5.758 19 3.636 19 2.318 17.682C1 16.364 1 14.242 1 10C1 5.758 1 3.636 2.318 2.318C3.636 1 5.758 1 10 1" stroke="#697079" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+
+                                            </button>
+                                            <button className=" cursor-pointer border border-[#E04F4F] rounded-[6px] px-3 py-2 " >
+                                                <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M2.61601 16C2.17134 16 1.79101 15.8416 1.47501 15.525C1.15901 15.2083 1.00067 14.8286 1.00001 14.386V1.99998H0.500007C0.358007 1.99998 0.23934 1.95198 0.144007 1.85598C0.0486736 1.75998 0.000673516 1.64098 6.84931e-06 1.49898C-0.000659817 1.35698 0.0473402 1.23831 0.144007 1.14298C0.240674 1.04765 0.35934 0.99998 0.500007 0.99998H4.00001C4.00001 0.793314 4.07667 0.613314 4.23001 0.45998C4.38334 0.306647 4.56334 0.22998 4.77001 0.22998H9.23001C9.43667 0.22998 9.61667 0.306647 9.77001 0.45998C9.92334 0.613314 10 0.793314 10 0.99998H13.5C13.642 0.99998 13.7607 1.04798 13.856 1.14398C13.9513 1.23998 13.9993 1.35898 14 1.50098C14.0007 1.64298 13.9527 1.76165 13.856 1.85698C13.7593 1.95231 13.6407 1.99998 13.5 1.99998H13V14.385C13 14.829 12.8417 15.209 12.525 15.525C12.2083 15.841 11.8283 15.9993 11.385 16H2.61601ZM12 1.99998H2.00001V14.385C2.00001 14.5643 2.05767 14.7116 2.17301 14.827C2.28834 14.9423 2.43601 15 2.61601 15H11.385C11.5643 15 11.7117 14.9423 11.827 14.827C11.9423 14.7116 12 14.5643 12 14.385V1.99998ZM5.30801 13C5.45001 13 5.56901 12.952 5.66501 12.856C5.76101 12.76 5.80867 12.6413 5.80801 12.5V4.49998C5.80801 4.35798 5.76001 4.23931 5.66401 4.14398C5.56801 4.04865 5.44901 4.00065 5.30701 3.99998C5.16501 3.99931 5.04634 4.04731 4.95101 4.14398C4.85567 4.24065 4.80801 4.35931 4.80801 4.49998V12.5C4.80801 12.642 4.85601 12.7606 4.95201 12.856C5.04801 12.952 5.16667 13 5.30801 13ZM8.69301 13C8.83501 13 8.95367 12.952 9.04901 12.856C9.14434 12.76 9.19201 12.6413 9.19201 12.5V4.49998C9.19201 4.35798 9.14401 4.23931 9.04801 4.14398C8.95201 4.04798 8.83334 3.99998 8.69201 3.99998C8.55001 3.99998 8.43101 4.04798 8.33501 4.14398C8.23901 4.23998 8.19134 4.35865 8.19201 4.49998V12.5C8.19201 12.642 8.24001 12.7606 8.33601 12.856C8.43201 12.9513 8.55101 12.9993 8.69301 13Z" fill="#E04F4F" />
+                                                </svg>
+
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={5}
+                                        className="px-4 py-4 text-center text-gray-500"
+                                    >
+                                        No providers found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </>
+    );
+}
