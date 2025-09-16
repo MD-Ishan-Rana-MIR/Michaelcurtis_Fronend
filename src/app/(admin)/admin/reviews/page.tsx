@@ -1,9 +1,12 @@
 import React from 'react'
+import AllReview from './AllReview'
 
-const page = () => {
+const Page: React.FC = () => {
   return (
-    <div>page</div>
+    <div>
+      <AllReview></AllReview>
+    </div>
   )
 }
 
-export default page
+export default Page
