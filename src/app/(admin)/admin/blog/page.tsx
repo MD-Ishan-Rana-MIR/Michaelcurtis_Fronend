@@ -1,9 +1,12 @@
 import React from 'react'
+import BlogList from './BlogList'
 
-const page = () => {
+const Page: React.FC = () => {
   return (
-    <div>page</div>
+    <div>
+      <BlogList></BlogList>
+    </div>
   )
 }
 
-export default page
+export default Page
