@@ -6,11 +6,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import {
     FiChevronDown,
     FiChevronRight,
-    FiUsers,
-    FiFileText,
-    FiBell,
-    FiClipboard,
-    FiBook,
+
 } from "react-icons/fi";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -173,12 +169,12 @@ export default function Sidebar() {
                     {openSubmenu && (
                         <div className="ml-6 mt-2 space-y-1">
                             {[
-                                { name: "Terms & Condition", href: "/content/terms" },
-                                { name: "Privacy Policy", href: "/content/privacy" },
-                                { name: "FAQ", href: "/content/faq" },
-                                { name: "Contact Info", href: "/content/contact" },
-                                { name: "Methodology", href: "/content/methodology" },
-                                { name: "About", href: "/content/about" },
+                                { name: "Terms & Condition", href: "/admin/content/terms" },
+                                { name: "Privacy Policy", href: "/admin/content/privacy" },
+                                { name: "FAQ", href: "/admin/content/faq" },
+                                { name: "Contact Info", href: "/admin/content/contact" },
+                                { name: "Methodology", href: "/admin/content/methodology" },
+                                { name: "About", href: "/admin/content/about" },
                             ].map((sub, idx) => {
                                 const isSubActive = pathname === sub.href;
                                 return (

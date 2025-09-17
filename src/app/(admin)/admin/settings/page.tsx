@@ -1,9 +1,12 @@
 import React from 'react'
+import UserProfile from './UserProfile'
 
-const page = () => {
+const Page: React.FC = () => {
     return (
-        <div>page</div>
+        <div>
+            <UserProfile></UserProfile>
+        </div>
     )
 }
 
-export default page
+export default Page
