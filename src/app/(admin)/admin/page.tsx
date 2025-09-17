@@ -1,62 +1,14 @@
 "use client"
+import ReviewCard from '@/app/components/home/ReviewCard'
+import ReviewChart from '@/app/pages/admin/ReviewChart'
+import WeekChart from '@/app/pages/admin/WeekChart'
 import React from 'react'
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import 'chart.js/auto';
-import { ChartOptions, ChartData } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Page: React.FC = () => {
   // Data for the chart
   // Define data type
-  const data: ChartData<'bar'> = {
-    labels: ['Auto', 'Health', 'Life', 'Home', 'Renters', 'Car'],
-    datasets: [
-      {
-        label: 'Reviews Distribution',
-        data: [25, 15, 20, 10, 5, 25], // These values are just examples
-        backgroundColor: [
-          '#3498db', // Auto
-          '#e91e63', // Health
-          '#2ecc71', // Life
-          '#f39c12', // Home
-          '#e74c3c', // Renters
-          '#1abc9c', // Car
-        ],
-        borderRadius: 10,
-        barPercentage: 0.5,
-        categoryPercentage: 0.5,
-      },
-    ],
-  };
 
-  // Define options type
-  const options: ChartOptions<'bar'> = {
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          boxWidth: 20,
-          padding: 10,
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => `${context.label}: ${context.raw}%`, // Format tooltip to show %
-        },
-      },
-    },
-    responsive: true,
-    scales: {
-      x: {
-        beginAtZero: true,
-      },
-      y: {
-        max: 30, // Adjust this value as per your data
-      },
-    },
-  };
 
 
   return (
@@ -106,35 +58,36 @@ const Page: React.FC = () => {
 
       {/* bar chat  */}
 
+      <div className=' flex justify-between items-center mt-8  gap-x-8  ' >
+        <div className=' flex-1 ' >
+          <WeekChart></WeekChart>
+        </div>
+        <div className=' flex-1 ' >
+          <ReviewChart />
+        </div>
+      </div>
 
-      <div>
 
 
-        <div className="p-6 bg-white rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold text-center">Reviews Distribution</h3>
-          <div className="flex justify-center mt-4">
-            <Bar data={data} options={options} />
-          </div>
-          <div className="mt-6 flex justify-between text-xs">
-            <div className="text-blue-600">Auto</div>
-            <div className="text-pink-600">Health</div>
-            <div className="text-green-600">Life</div>
-            <div className="text-red-600">Home</div>
-            <div className="text-orange-600">Renters</div>
-            <div className="text-teal-600">Car</div>
+
+      {/* redent activeity  */}
+
+
+
+
+      <div className=' mt-11 ' >
+        <div className=' shadow shadow-[#00000033] bg-[#FAF5EC] rounded-[12px] py-7 px-6 ' >
+          <h1 className=' text-xl text-[#000000] ' >Recent Activity </h1>
+          <div className=' flex justify-between items-center mt-9          ' >
+            <h1 className=' 
+            text-lg ' >John D. submitted a review for State Farm</h1>
+            <p className=' font-thin ' >1h ago</p>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
       </div>
+
+
+
 
 
 
