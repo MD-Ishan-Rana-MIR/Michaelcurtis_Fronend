@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import UserView from "./UserView";
 
 interface User {
     id: number;
@@ -26,7 +27,7 @@ export default function UserList() {
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +51,26 @@ export default function UserList() {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
     };
+
+
+    const [userViewModal, setUserViewModal] = useState<boolean>(false);
+
+
+    const handleUserViewModal = () => {
+        setUserViewModal(true)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <div>
@@ -129,7 +150,7 @@ export default function UserList() {
                                     <td className="px-4 py-2 text-center text-sm font-normal  ">{user.joinDate}</td>
                                     <td className="px-4 py-2 flex gap-2 justify-center ">
                                         <button
-                                            onClick={() => setSelectedUser(user)}
+                                            onClick={handleUserViewModal}
                                             className=" cursor-pointer border border-[#989DA3] text-white px-2 py-1 rounded "
                                         >
                                             <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -154,38 +175,8 @@ export default function UserList() {
 
 
                 {/* User Detail Modal */}
-                {selectedUser && (
-                    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 w-96 relative">
-                            <button
-                                onClick={() => setSelectedUser(null)}
-                                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-                            >
-                                &times;
-                            </button>
-                            <div className="flex flex-col items-center gap-4">
-                                <Image
-                                    src={selectedUser.image}
-                                    alt={selectedUser.name}
-                                    width={80}
-                                    height={80}
-                                    className="rounded-full"
-                                />
-                                <h2 className="text-xl font-bold">{selectedUser.name}</h2>
-                                <p>
-                                    <span className="font-semibold">Role:</span> {selectedUser.role}
-                                </p>
-                                <p>
-                                    <span className="font-semibold">Status:</span>{" "}
-                                    {selectedUser.status}
-                                </p>
-                                <p>
-                                    <span className="font-semibold">Join Date:</span>{" "}
-                                    {selectedUser.joinDate}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                {userViewModal && (
+                    <UserView userViewModal={userViewModal} setUserViewModal={setUserViewModal} />
                 )}
             </div>
 
