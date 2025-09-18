@@ -114,8 +114,8 @@ const TopInsurance = () => {
         },
     ];
 
-    const [showAll, setShowAll] = React.useState(false);
-    const visible = showAll ? insurers : insurers.slice(0, 4);
+
+
 
     return (
         <div className="pb-6 lg:pb-11">
@@ -129,7 +129,7 @@ const TopInsurance = () => {
 
                 <div className="mt-9">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                        {visible.map((insurer) => (
+                        {insurers.slice(0, 4).map((insurer) => (
                             <InsuranceCard key={insurer.id} data={insurer} />
                         ))}
                     </div>
@@ -137,7 +137,7 @@ const TopInsurance = () => {
                     <div className="mt-6 flex justify-center">
                         <Link href={"/providers"}>
 
-                            <button onClick={() => setShowAll(true)} className="  cursor-pointer border border-[#D09A40] py-3 px-6 rounded-[26px] text-[#D09A40] font-medium ">
+                            <button className="  cursor-pointer border border-[#D09A40] py-3 px-6 rounded-[26px] text-[#D09A40] font-medium ">
                                 View All Providers
                             </button>
 

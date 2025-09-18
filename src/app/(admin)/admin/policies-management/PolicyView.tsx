@@ -170,10 +170,10 @@ const PolicyView: React.FC<PolicyViewProps> = ({
                 <div className="border border-[#989DA3] rounded-[9px] py-4 px-9 mt-7">
                     <h1 className="text-3xl font-normal">What is Auto Insurance?</h1>
                     <p className="text-lg font-thin mt-2">
-                        Auto insurance is a contract between you and an insurance company that protects you against financial loss in the event of an accident or theft. In exchange for your paying a premium, the insurance company agrees to pay your losses as outlined in your policy. It's designed to cover costs related to property damage, medical bills for injuries, and legal liabilities.
+                        Auto insurance is a contract between you and an insurance company that protects you against financial loss in the event of an accident or theft. In exchange for your paying a premium, the insurance company agrees to pay your losses as outlined in your policy. It&apos;s designed to cover costs related to property damage, medical bills for injuries, and legal liabilities.
                     </p>
 
-                    <h1 className="text-3xl font-normal mt-4">What's Covered (and What's Not)?</h1>
+                    <h1 className="text-3xl font-normal mt-4">What&apos;s Covered (and What&apos;s Not)?</h1>
                     <p className="text-lg font-thin mt-2">
                         Standard auto policies are typically bundled with several types of coverage:
                     </p>

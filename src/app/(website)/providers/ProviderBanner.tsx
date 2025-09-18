@@ -101,32 +101,9 @@ const ProviderBanner = () => {
 
 
     const [selected, setSelected] = React.useState<Insurer[]>([]);
+    console.log(selected)
     // const [isOpen, setIsOpen] = React.useState(false);
-    const handleCompareChange = (data: Insurer, checked: boolean) => {
-        // প্রথমে previous selected items localStorage থেকে নিয়ে আসা
-        const stored = localStorage.getItem("selectedInsurers");
-        const prevSelected: Insurer[] = stored ? JSON.parse(stored) : [];
 
-        let newSelected: Insurer[];
-
-        if (checked) {
-            // Prevent duplicates
-            if (!prevSelected.some(i => i.id === data.id)) {
-                newSelected = [...prevSelected, data];
-            } else {
-                newSelected = prevSelected;
-            }
-        } else {
-            // Remove if unchecked
-            newSelected = prevSelected.filter(i => i.id !== data.id);
-        }
-
-        // Save updated array to localStorage
-        localStorage.setItem("selectedInsurers", JSON.stringify(newSelected));
-
-        // Optional: state update যদি চান
-        setSelected(newSelected);
-    };
     const [openCompareModal, setOpenCompareModal] = React.useState(false);
 
 
@@ -143,13 +120,13 @@ const ProviderBanner = () => {
         }
     }, []);
 
-    const handleOpenModal = () => {
-        if (selected.length === 0 || selected.length < 2 || !selected) {
-            alert("Please select at least 2 items to compare");
-        } else {
-            setOpenCompareModal(true);
-        }
-    };
+    // const handleOpenModal = () => {
+    //     if (selected.length === 0 || selected.length < 2 || !selected) {
+    //         alert("Please select at least 2 items to compare");
+    //     } else {
+    //         setOpenCompareModal(true);
+    //     }
+    // };
 
 
 
@@ -184,7 +161,7 @@ const ProviderBanner = () => {
     return (
         <div>
             <MaxWidth>
-                <div className=' flex flex-col md:flex-row gap-x-6 my-10 ' >
+                <div className=' flex flex-col md:flex-row gap-x-6 my-10  lg:space-y-0 space-y-6 ' >
                     {/* left side  */}
                     <div className=' md:max-w-[20%]  flex-1 p-6 shadow-lg h-[80vh] w-full ' >
                         <div className=' flex justify-between ' >
@@ -376,7 +353,7 @@ const ProviderBanner = () => {
                         <div>
                             <h1 className=' lg:text-4xl text-xl font-normal ' >124 Insurance Providers</h1>
                         </div>
-                        <div className='  grid md:grid-cols-2  gap-x-5 gap-y-6  ' >
+                        <div className='  flex flex-wrap  gap-x-5 gap-y-6  mx-auto ' >
                             {
                                 insuranceData?.map((item, i) => {
                                     return (
@@ -487,7 +464,7 @@ const ProviderBanner = () => {
                                                         </button>
                                                     </div>
                                                     <div>
-                                                        <button className=' bg-[#D09A40] border border-[#D09A40] py-1 w-full rounded-[34px] lg:mt-9 mt-4 text-[#FFFFFF] lg:text-xl text-sm font-normal ' >View Profile</button>
+                                                        <button className=' cursor-pointer bg-[#D09A40] border border-[#D09A40] py-1 w-full rounded-[34px] lg:mt-9 mt-4 text-[#FFFFFF] lg:text-xl text-sm font-normal ' >View Profile</button>
                                                     </div>
                                                 </div>
                                             </div>

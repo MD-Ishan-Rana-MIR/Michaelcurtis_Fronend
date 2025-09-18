@@ -1,17 +1,15 @@
 "use client"
-import { Editor } from "primereact/editor";
 
 import React, { useEffect, useRef, useState } from "react";
 
 
 type PolicyViewProps = {
-    faqModal: boolean;
-    setFaqModal: React.Dispatch<React.SetStateAction<boolean>>;
+    addModal: boolean;
+    setAddModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const FaqCreateFrom: React.FC<PolicyViewProps> = ({
-    faqModal,
-    setFaqModal,
+const InsuranceView: React.FC<PolicyViewProps> = ({
+    setAddModal, addModal
 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const firstFocusableRef = useRef<HTMLButtonElement>(null);
@@ -19,17 +17,17 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
 
     // Open animation
     useEffect(() => {
-        if (faqModal) {
+        if (addModal) {
             const timer = setTimeout(() => setShowModal(true), 50);
             return () => clearTimeout(timer);
         }
-    }, [faqModal]);
+    }, [addModal]);
 
     // Close modal
     const handleClose = React.useCallback(() => {
         setShowModal(false);
-        setTimeout(() => setFaqModal(false), 500);
-    }, [setFaqModal]);
+        setTimeout(() => setAddModal(false), 500);
+    }, [setAddModal]);
 
     // Close on click outside
     useEffect(() => {
@@ -64,27 +62,26 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
             }
         };
 
-        if (faqModal) {
+        if (addModal) {
             document.addEventListener("keydown", handleKeyDown);
             // Focus first button
             setTimeout(() => firstFocusableRef.current?.focus(), 100);
         }
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [faqModal, handleClose]);
-
-
-    const [title, setTitle] = useState("");
-
-
-    const [description, setDescription] = useState("");
+    }, [addModal, handleClose]);
 
 
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Submit logic here
 
-    };
+
+
+
+
+
+
+
+
+
 
 
 
@@ -98,7 +95,7 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
         <>
             {/* Backdrop */}
             <div
-                className={`fixed inset-0   bg-opacity-50 transition-opacity duration-500 ${showModal ? "opacity-100" : "opacity-0 pointer-events-none"
+                className={`fixed inset-0 z-50   bg-opacity-50 transition-opacity duration-500 ${showModal ? "opacity-100" : "opacity-0 pointer-events-none"
                     }`}
                 onClick={handleClose}
             />
@@ -108,7 +105,7 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
                 ref={modalRef}
                 role="dialog"
                 aria-modal="true"
-                className={`fixed top-10 h-[80vh] overflow-y-auto left-1/2 transform -translate-x-1/2 max-w-3xl w-full mx-4 bg-white shadow-lg rounded-lg pt-12 pb-6 px-12 transition-all duration-500 ease-out
+                className={`fixed z-50 top-10 h-[80vh] overflow-y-auto left-1/2 transform -translate-x-1/2 max-w-3xl w-full mx-4 bg-white shadow-lg rounded-lg pt-12 pb-6 px-12 transition-all duration-500 ease-out
           ${showModal ? "translate-y-20 opacity-100 scale-100" : "-translate-y-40 opacity-0 scale-95"}`}
             >
                 {/* Close Button */}
@@ -121,42 +118,9 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
                 </button>
 
 
-                <div className="">
-                    <form
-                        onSubmit={handleSubmit}
-                        className=" rounded-lg   "
-                    >
-                        {/* Post Title */}
-                        <div className="flex flex-col">
-                            <label className="mb-3  text-xl font-normal ">Question</label>
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                className="px-4 py-2 border border-[#989DA3] rounded-[7px] focus:outline-none focus:ring-0 "
-                                // placeholder="Enter post title"
-                                required
-                            />
-                        </div>
 
 
 
-                        {/* Blog Description */}
-                        <div className="flex flex-col mt-7 ">
-                            <label className="mb-3  text-xl font-normal">Answer</label>
-                            <Editor
-                                value={description}
-                                onTextChange={(e) => setDescription(e.htmlValue ?? "")}
-                                style={{ height: "200px" }}
-                                className="border rounded"
-                            />
-                        </div>
-
-
-
-
-                    </form>
-                </div>
 
 
 
@@ -177,4 +141,4 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
     );
 };
 
-export default FaqCreateFrom;
+export default InsuranceView;

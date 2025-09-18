@@ -1,5 +1,4 @@
 "use client"
-import ReviewCard from '@/app/components/home/ReviewCard'
 import ReviewChart from '@/app/pages/admin/ReviewChart'
 import WeekChart from '@/app/pages/admin/WeekChart'
 import React from 'react'

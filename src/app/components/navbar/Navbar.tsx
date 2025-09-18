@@ -86,83 +86,89 @@ const Navbar = () => {
           </div>
 
           {/* Login/Profile & Sign Up */}
-          <div className="flex flex-row gap-x-4  relative" ref={profileRef}>
-            {isLoggedIn ? (
-              <div className="  " >
-                <button
-                  className="  "
-                  onClick={() => setProfileOpen(!profileOpen)}
-                >
-                  <Image src={"/images/insurance/user-img.svg"} width={61} height={61} alt="" className=" w-[64px] h-[64px] cursor-pointer border border-[#BD8C3A] p-1 rounded-full
+          <div className=" hidden md:block " >
+            <div className="flex flex-row gap-x-4  relative  " ref={profileRef}>
+              {isLoggedIn ? (
+                <div className="  " >
+                  <button
+                    className="  "
+                    onClick={() => setProfileOpen(!profileOpen)}
+                  >
+                    <Image src={"/images/insurance/user-img.svg"} width={61} height={61} alt="" className=" w-[64px] h-[64px] cursor-pointer border border-[#BD8C3A] p-1 rounded-full
                    " />
-                </button>
+                  </button>
 
-                {/* Profile dropdown */}
-                {profileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2 hover:bg-gray-100 lg:text-xl text-sm font-normal  "
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      View Profile
-                    </Link>
-                    {/* <Link
+                  {/* Profile dropdown */}
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                      <Link
+                        href="/profile"
+                        className="block px-4 py-2 hover:bg-gray-100 lg:text-xl text-sm font-normal  "
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        View Profile
+                      </Link>
+                      {/* <Link
                       href="/change-password"
                       className="block px-4 py-2 hover:bg-gray-100"
                       onClick={() => setProfileOpen(false)}
                     >
                       Change Password
                     </Link> */}
-                    <button
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 lg:text-xl text-sm font-normal "
-                      onClick={() => {
-                        setIsLoggedIn(false);
-                        setProfileOpen(false);
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <>
-                <button
-                  className="px-6 py-2 text-black border border-gray-400 rounded-full"
-                  onClick={() => setIsLoggedIn(true)}
-                >
-                  Login
-                </button>
-                <Link href="/auth/sign-up">
-                  <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full">
-                    Sign Up
+                      <button
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 lg:text-xl text-sm font-normal "
+                        onClick={() => {
+                          setIsLoggedIn(false);
+                          setProfileOpen(false);
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <button
+                    className="px-6 py-2 text-black border border-gray-400 rounded-full"
+                    onClick={() => setIsLoggedIn(true)}
+                  >
+                    Login
                   </button>
-                </Link>
-              </>
-            )}
+                  <Link href="/auth/sign-up">
+                    <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full">
+                      Sign Up
+                    </button>
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button onClick={() => setIsOpen(true)}>
-              <Menu size={28} />
+              <Menu size={28} className=" cursor-pointer " />
             </button>
           </div>
         </div>
       </MaxWidth>
 
       {/* Mobile Sidebar */}
+      {/* Mobile Sidebar */}
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 ${isOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
+        {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="font-bold text-lg">Menu</h2>
           <button onClick={() => setIsOpen(false)}>
-            <X size={28} />
+            <X className="cursor-pointer" size={28} />
           </button>
         </div>
+
+        {/* Menu Items */}
         <div className="flex flex-col p-4 space-y-4">
           {navItems.map((item) => (
             <Link
@@ -174,34 +180,63 @@ const Navbar = () => {
               {item.name}
             </Link>
           ))}
-          {isLoggedIn ? (
-            <>
-              <Link href="/profile">
-                <button className="bg-gray-100 w-full text-left px-4 py-2 rounded-lg">
-                  Profile
+
+          {/* Auth / Profile Section */}
+          <div className="block" ref={profileRef}>
+            {isLoggedIn ? (
+              <div className="relative">
+                <button onClick={() => setProfileOpen(!profileOpen)}>
+                  <Image
+                    src="/images/insurance/user-img.svg"
+                    width={64}
+                    height={64}
+                    alt="User"
+                    className="w-[64px] h-[64px] cursor-pointer border border-[#BD8C3A] p-1 rounded-full"
+                  />
                 </button>
-              </Link>
-              <Link href="/change-password">
-                <button className="bg-gray-100 w-full text-left px-4 py-2 rounded-lg">
-                  Change Password
+
+                {/* Profile dropdown */}
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      View Profile
+                    </Link>
+
+                    <button
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm font-normal"
+                      onClick={() => {
+                        setIsLoggedIn(false);
+                        setProfileOpen(false);
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <button
+                  className="px-6 py-2 text-black border border-gray-400 rounded-full"
+                  onClick={() => setIsLoggedIn(true)}
+                >
+                  Login
                 </button>
-              </Link>
-              <button
-                className="bg-gray-100 w-full text-left px-4 py-2 rounded-lg"
-                onClick={() => setIsLoggedIn(false)}
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link href="/auth/login">
-              <button className="bg-black text-white w-full px-4 py-2 rounded-lg">
-                Login
-              </button>
-            </Link>
-          )}
+                <Link href="/auth/sign-up">
+                  <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full">
+                    Sign Up
+                  </button>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
 
       {/* Overlay */}
       {isOpen && <div onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/40 z-40" />}

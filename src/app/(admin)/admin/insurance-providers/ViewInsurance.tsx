@@ -1,11 +1,116 @@
-import Image from 'next/image'
-import React from 'react'
+"use client"
 
-const ViewInsurance = () => {
+import React, { useEffect, useRef, useState } from "react";
+
+
+type PolicyViewProps = {
+    viewModal: boolean;
+    setViewModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const UploadBlog: React.FC<PolicyViewProps> = ({
+    viewModal,
+    setViewModal,
+}) => {
+    const modalRef = useRef<HTMLDivElement>(null);
+    const firstFocusableRef = useRef<HTMLButtonElement>(null);
+    const [showModal, setShowModal] = useState(false);
+
+    // Open animation
+    useEffect(() => {
+        if (viewModal) {
+            const timer = setTimeout(() => setShowModal(true), 50);
+            return () => clearTimeout(timer);
+        }
+    }, [viewModal]);
+
+    // Close modal
+    const handleClose = React.useCallback(() => {
+        setShowModal(false);
+        setTimeout(() => setViewModal(false), 500);
+    }, [setViewModal]);
+
+    // Close on click outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+                handleClose();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [handleClose]);
+
+    // Close on ESC and handle focus trap
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") handleClose();
+
+            if (e.key === "Tab" && modalRef.current) {
+                const focusableEls = modalRef.current.querySelectorAll(
+                    'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstEl = focusableEls[0] as HTMLElement;
+                const lastEl = focusableEls[focusableEls.length - 1] as HTMLElement;
+
+                if (!e.shiftKey && document.activeElement === lastEl) {
+                    firstEl.focus();
+                    e.preventDefault();
+                } else if (e.shiftKey && document.activeElement === firstEl) {
+                    lastEl.focus();
+                    e.preventDefault();
+                }
+            }
+        };
+
+        if (viewModal) {
+            document.addEventListener("keydown", handleKeyDown);
+            // Focus first button
+            setTimeout(() => firstFocusableRef.current?.focus(), 100);
+        }
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [viewModal, handleClose]);
+
+
+
+
+
+
+
+
+
+
+
     return (
-        <div>
-            <div className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50">
-                <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg pt-12 pb-6 px-12  ">
+        <>
+            {/* Backdrop */}
+            <div
+                className={`fixed inset-0 z-50   bg-opacity-50 transition-opacity duration-500 ${showModal ? "opacity-100" : "opacity-0 pointer-events-none"
+                    }`}
+                onClick={handleClose}
+            />
+
+            {/* Modal */}
+            <div
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                className={`fixed z-50 top-0 h-[95vh] overflow-y-auto left-1/2 transform -translate-x-1/2 max-w-3xl w-full mx-4 bg-white shadow-lg rounded-lg pt-12 pb-6 px-12 transition-all duration-500 ease-out
+          ${showModal ? "translate-y-20 opacity-100 scale-100" : "-translate-y-40 opacity-0 scale-95"}`}
+            >
+                {/* Close Button */}
+                <button
+                    onClick={handleClose}
+                    ref={firstFocusableRef}
+                    className="absolute top-4 right-4 cursor-pointer text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                >
+                    ✕
+                </button>
+
+
+                <div>
+
+
                     {/* Header: Logo and Insurance Title */}
                     <div className="flex  mb-6 gap-x-7 ">
                         {/* <Image
@@ -84,6 +189,7 @@ const ViewInsurance = () => {
                         </div>
                     </div>
 
+
                     {/* Community Reviews Section */}
                     <div className=" bg-[#FAF5EC] shadow shadow-[#00000033] rounded-[10px] px-8 pt-4 pb-9  ">
                         <h3 className="lg:text-[27] text-lg text-black font-normal ">Community Reviews</h3>
@@ -114,9 +220,13 @@ const ViewInsurance = () => {
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    )
-}
 
-export default ViewInsurance
+
+
+
+            </div>
+        </>
+    );
+};
+
+export default UploadBlog;

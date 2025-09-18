@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import React, { useEffect, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 
@@ -71,9 +71,6 @@ const ViewReview: React.FC<PolicyViewProps> = ({
     }, [reviewModal, handleClose]);
 
 
-    // How was your overall experience
-    const [rating, setRating] = useState(0); // current selected rating
-    const [hover, setHover] = useState(0);   // hover effect
 
     // Claims
 
@@ -109,7 +106,6 @@ const ViewReview: React.FC<PolicyViewProps> = ({
 
 
 
-    const [message, setMessage] = useState("");
 
     return (
         <>

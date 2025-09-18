@@ -72,6 +72,8 @@ const BlogBanner = () => {
       ? blogs
       : blogs.filter((blog) => blog.category === activeCategory);
 
+  console.log(filteredBlogs)
+
 
 
   const [currentPage, setCurrentPage] = useState(1);
