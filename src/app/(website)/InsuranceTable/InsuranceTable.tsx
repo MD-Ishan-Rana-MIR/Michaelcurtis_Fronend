@@ -1,5 +1,4 @@
 // components/InsuranceTable.tsx
-import Image from 'next/image';
 import React from 'react';
 
 const InsuranceTable = () => {
@@ -405,7 +404,7 @@ const InsuranceTable = () => {
                         </tr>
 
                         <tr>
-                            <td className="border border-gray-300 p-4 lg:text-lg text-xs font-thin   ">Digital Tools</td>
+                            <td className="border border-gray-300 p-4 lg:text-lg text-xs font-thin   ">Transparency & Trust</td>
                             <td className=" p-4 text-center border border-gray-300  ">
                                 <div className="w-[222px] bg-gray-200 rounded-full mx-auto h-3">
                                     <div

@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
-import { FiEye, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import ViewInsurance from "./ViewInsurance";
-import UploadInsurance from "./UploadInsurance";
+import CreateProvider from "./CreateProvider";
 
 const initialProviders = [
     { provider: "Gloirepaluku", states: "49 States", avgScore: "4.8/5 (A+)", policies: "Auto, Home", sponsored: true },
@@ -29,18 +29,18 @@ const Provider = () => {
     const [statusFilter, setStatusFilter] = useState("");
     const [policyFilter, setPolicyFilter] = useState("");
 
-    const [viewModal, setViewModal] = useState<ProviderType | null>(null);
+    const [viewModal, setViewModal] = useState<boolean>(false);
     const [addModal, setAddModal] = useState(false);
 
 
 
-    const [newProvider, setNewProvider] = useState<ProviderType>({
-        provider: "",
-        states: "",
-        avgScore: "",
-        policies: "",
-        sponsored: false,
-    });
+    // const [newProvider, setNewProvider] = useState<ProviderType>({
+    //     provider: "",
+    //     states: "",
+    //     avgScore: "",
+    //     policies: "",
+    //     sponsored: false,
+    // });
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -68,19 +68,29 @@ const Provider = () => {
         setProviders(providers.filter((_, i) => i !== index));
     };
 
-    const handleAddProvider = () => {
-        if (newProvider.provider && newProvider.states) {
-            setProviders([...providers, newProvider]);
-            setNewProvider({ provider: "", states: "", avgScore: "", policies: "", sponsored: false });
-            setAddModal(false);
-            setCurrentPage(totalPages); // go to last page
-        }
-    };
+    // const handleAddProvider = () => {
+    //     if (newProvider.provider && newProvider.states) {
+    //         setProviders([...providers, newProvider]);
+    //         setNewProvider({ provider: "", states: "", avgScore: "", policies: "", sponsored: false });
+    //         setAddModal(false);
+    //         setCurrentPage(totalPages); // go to last page
+    //     }
+    // };
 
     const goToPage = (page: number) => {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
     };
+
+
+    // provider view modal 
+
+    const handleOpenModal = () => {
+        setViewModal(true)
+    }
+
+
+
 
 
 
@@ -239,7 +249,7 @@ const Provider = () => {
                                     </td>
                                     <td className="px-6 py-3 flex gap-2">
                                         <button
-                                            onClick={() => setViewModal(provider)}
+                                            onClick={handleOpenModal}
                                             className=" border border-[#989DA3] rounded-[6px] px-2 py-1 cursor-pointer "
                                         >
                                             <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -275,12 +285,12 @@ const Provider = () => {
 
                 {/* View Modal */}
                 {viewModal && (
-                    <ViewInsurance></ViewInsurance>
+                    <ViewInsurance viewModal={viewModal} setViewModal={setViewModal} ></ViewInsurance>
                 )}
 
                 {/* Add Modal */}
                 {addModal && (
-                    <UploadInsurance setAddModal={setAddModal} addModal={addModal} ></UploadInsurance>
+                    <CreateProvider setAddModal={setAddModal} addModal={addModal} ></CreateProvider>
                 )}
             </div>
 

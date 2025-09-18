@@ -75,7 +75,7 @@ const AboutBanner = () => {
                         <div>
                             <h1 className=' lg:mt-5 mt-3  lg:text-xl text-xs font-normal text-center text-black ' >Unwavering Transparency</h1>
                             <p className=' text-center lg:text-lg text-xs font-thin ' >
-                                We believe in clear, honest information. We'll always show you how scores are calculated and clearly label any sponsored content..
+                                We believe in clear, honest information. We&apos;ll always show you how scores are calculated and clearly label any sponsored content..
                             </p>
                         </div>
                     </div>

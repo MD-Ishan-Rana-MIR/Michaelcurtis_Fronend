@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import UploadBlog from "./UploadBlog";
 import BlogView from "./BlogView";
 import BlogUpdate from "./BlogUpdate";
+import { useRouter } from "next/navigation";
 
 interface PostType {
     id: number;
@@ -62,8 +63,10 @@ export default function BlogList() {
 
     const [viewModal, setViewModal] = useState<boolean>(false);
 
-    const handleBlogViewModal = () => {
-        setViewModal(true)
+    const router = useRouter();
+
+    const handleBlogViewModal = (id: number) => {
+        router.push(`/admin/blog-details/${id}`)
 
     }
 
@@ -199,7 +202,7 @@ export default function BlogList() {
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 flex gap-2 justify-center ">
-                                            <button onClick={handleBlogViewModal} className="px-2.5 py-1.5 border border-[#989DA3] rounded-[6px] cursor-pointer ">
+                                            <button onClick={() => { handleBlogViewModal(post?.id) }} className="px-2.5 py-1.5 border border-[#989DA3] rounded-[6px] cursor-pointer ">
                                                 <span>
                                                     <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M2.275 12.296C1.425 11.192 1 10.639 1 9C1 7.36 1.425 6.809 2.275 5.704C3.972 3.5 6.818 1 11 1C15.182 1 18.028 3.5 19.725 5.704C20.575 6.81 21 7.361 21 9C21 10.64 20.575 11.191 19.725 12.296C18.028 14.5 15.182 17 11 17C6.818 17 3.972 14.5 2.275 12.296Z" stroke="#697079" />

@@ -1,7 +1,28 @@
 import React from 'react'
 import MaxWidth from '../max-width/MaxWidth'
+import Link from 'next/link'
+export type Insurer = {
+    id: number;
+    name: string;
+    logoUrl: string;
+    priceUSD: number;
+    rating: number;
+    profileHref?: string;
+    // individual score fields (0..5)
+    claims: number;
+    service: number;
+    pricing: number;
+    coverage: number;
+    digitalTools: number;
+};
 
-const CompareCard = ({ openCompareModal, modalRef, selected }) => {
+type CompareCardProps = {
+    openCompareModal: boolean;
+    modalRef: React.RefObject<HTMLDivElement | null>;
+    selected: Insurer[]; // Replace 'string[]' with a more specific type if needed
+};
+
+const CompareCard: React.FC<CompareCardProps> = ({ openCompareModal, modalRef, selected }) => {
     return (
         <div>
             <MaxWidth>
@@ -62,9 +83,9 @@ const CompareCard = ({ openCompareModal, modalRef, selected }) => {
                                 </span>
 
                             </div>
-                            <button className=" bg-[#D09A40] px-5 py-2 rounded-[26px] text-white font-medium text-lg cursor-pointer lg:text-xl " >
+                            <Link href={"/InsuranceTable"}><button className=" bg-[#D09A40] px-5 py-2 rounded-[26px] text-white font-medium text-lg cursor-pointer lg:text-xl " >
                                 Compare Now
-                            </button>
+                            </button></Link>
                         </div>
                     </div>
 

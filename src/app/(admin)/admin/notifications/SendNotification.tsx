@@ -5,14 +5,12 @@ import { FaChevronUp } from "react-icons/fa6";
 export default function SendNotification() {
     const [recipientType, setRecipientType] = useState("Select Recipient");
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [notificationType, setNotificationType] = useState("");
     const [message, setMessage] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log({
             recipientType,
-            notificationType,
             message,
         });
     };

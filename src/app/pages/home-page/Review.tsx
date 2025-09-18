@@ -69,7 +69,7 @@ const Review = () => {
     };
 
     return (
-        <div className=' lg:pb-[57px] pb-7 ' >
+        <div className=' lg:pb-[57px] pb-7  ' >
             <MaxWidth>
                 <div className='text-center'>
                     <h1 className='lg:text-4xl text-2xl font-medium text-black'>Community Highlights</h1>
@@ -84,7 +84,7 @@ const Review = () => {
                     ))}
                 </div>
 
-                <div className="text-center lg:mt-9  ">
+                <div className="text-center lg:mt-9 mt-5  ">
                     {reviewData.length > 3 && (
                         <button
                             onClick={toggleShow}

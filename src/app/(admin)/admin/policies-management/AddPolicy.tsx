@@ -45,6 +45,8 @@ const AddPolicy: React.FC<PolicyViewProps> = ({
 
     const [logo, setLogo] = useState<File | null>(null);
 
+    console.log(logo)
+
 
     const [preview, setPreview] = useState<string | null>(null);
 

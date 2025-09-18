@@ -7,47 +7,46 @@ import {
     BarElement,
     Tooltip,
     Legend,
+    ChartData,
+    ScriptableContext,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const weeklyData = {
+const createGradient = (ctx: CanvasRenderingContext2D, chartArea: { top: number; bottom: number }) => {
+    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+    gradient.addColorStop(0, "rgba(208,154,64,0.2)");
+    gradient.addColorStop(1, "rgba(208,154,64,1)");
+    return gradient as unknown as string; // type assertion for Chart.js
+};
+
+const weeklyData: ChartData<"bar", number[], string> = {
     labels: ["Progressive", "State Farm", "State Farm", "State Farm", "State Farm", "State Farm"],
     datasets: [
         {
             label: "Reviews",
             data: [130, 170, 205, 185, 150, 170],
-            backgroundColor: (context: any) => {
-                const chart = context.chart;
-                const { ctx, chartArea } = chart;
-
-                if (!chartArea) return null;
-                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                gradient.addColorStop(0, "rgba(208,154,64,0.2)");
-                gradient.addColorStop(1, "rgba(208,154,64,1)");
-                return gradient;
+            backgroundColor: (context: ScriptableContext<"bar">) => {
+                const { ctx, chartArea } = context.chart;
+                if (!chartArea) return "rgba(208,154,64,0.2)";
+                return createGradient(ctx, chartArea);
             },
             borderRadius: 8,
         },
     ],
 };
 
-const monthlyData = {
+const monthlyData: ChartData<"bar", number[], string> = {
     labels: ["Progressive", "State Farm", "State Farm", "State Farm", "State Farm", "State Farm"],
     datasets: [
         {
             label: "Reviews",
             data: [100, 140, 180, 160, 130, 150],
-            backgroundColor: (context: any) => {
-                const chart = context.chart;
-                const { ctx, chartArea } = chart;
-
-                if (!chartArea) return null;
-                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                gradient.addColorStop(0, "rgba(208,154,64,0.2)");
-                gradient.addColorStop(1, "rgba(208,154,64,1)");
-                return gradient;
+            backgroundColor: (context: ScriptableContext<"bar">) => {
+                const { ctx, chartArea } = context.chart;
+                if (!chartArea) return "rgba(208,154,64,0.2)";
+                return createGradient(ctx, chartArea);
             },
             borderRadius: 8,
         },
@@ -86,7 +85,7 @@ const ProviderChart: React.FC = () => {
     const [timeframe, setTimeframe] = useState<"weekly" | "monthly">("weekly");
 
     return (
-        <div className="bg-[#FDF7ED] shadow shadow-[#00000033] rounded-[12px] pt-5 pl-6 pr-9 border max-w-xl pb-3   ">
+        <div className="bg-[#FDF7ED] shadow shadow-[#00000033] rounded-[12px] pt-5 pl-6 pr-9 border max-w-xl pb-3">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-[#10101E]">Top Providers by Reviews</h2>
                 <div className="flex gap-4 text-sm font-medium text-gray-500 items-center">

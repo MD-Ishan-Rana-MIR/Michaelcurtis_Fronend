@@ -15,7 +15,7 @@ export type ScoreKey =
     | "Service"
     | "Pricing"
     | "Coverage"
-    | "Digital Tools";
+    | "Transparency & Trust";
 
 export type Insurer = {
     id: number;
@@ -37,7 +37,7 @@ const metricColors: Record<ScoreKey, string> = {
     Service: "bg-cyan-500",
     Pricing: "bg-amber-500",
     Coverage: "bg-fuchsia-500",
-    "Digital Tools": "bg-orange-500",
+    "Transparency & Trust": "bg-orange-500",
 };
 
 function Meter({ value, colorClass }: { value: number; colorClass: string }) {
@@ -68,7 +68,7 @@ export function InsuranceCard({ data }: { data: Insurer }) {
         { label: "Service", value: data.service },
         { label: "Pricing", value: data.pricing },
         { label: "Coverage", value: data.coverage },
-        { label: "Digital Tools", value: data.digitalTools },
+        { label: "Transparency & Trust", value: data.digitalTools },
     ];
 
 
@@ -122,7 +122,6 @@ export function InsuranceCard({ data }: { data: Insurer }) {
             setOpenCompareModal(true);
         }
     };
-
 
 
     const modalRef = React.useRef<HTMLDivElement>(null);
@@ -185,6 +184,11 @@ export function InsuranceCard({ data }: { data: Insurer }) {
                                 <span className="text-lg font-medium text-[#529F22] leading-none">
                                     ${data.priceUSD}
                                 </span>
+                                <div className=" w-1.5 h-1.5 bg-black rounded-full  " ></div>
+                                <div>
+                                    <h1 className=" text-lg font-bold text-[#23C223] " >A+</h1>
+                                </div>
+                                <div className=" w-1.5 h-1.5 bg-black rounded-full  " ></div>
                                 <Badge className="gap-1 bg-[#D9AE66] rounded-md px-2 py-1 text-xs">
                                     <Star className="h-3 w-3 fill-[#FFF07E] text-[#FFF07E]" />
                                     {data.rating.toFixed(1)}
