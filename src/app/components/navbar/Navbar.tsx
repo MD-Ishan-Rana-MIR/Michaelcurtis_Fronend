@@ -47,20 +47,21 @@ const Navbar = () => {
   }, [profileRef]);
 
   return (
-    <div className="sticky top-0 bg-white z-50 border-b-[2px]">
+    <div className="sticky top-0 bg-white z-50 border-b-[2px]  ">
       <MaxWidth>
-        <div className="flex items-center justify-between gap-x-7 py-1">
+        <div className="flex items-center justify-between gap-x-7 py-1  ">
           {/* Logo */}
-          <div className="font-bold text-xl">
-            <Link href="/">
+          <div >
+            <Link className=" flex items-center " href={"/"}>
               <Image
-                src="/images/logo/logo-1.png"
-                width={349}
-                height={100}
-                alt="logo"
-                className="w-[200px] md:w-[260px] lg:w-[349px]"
+                src="/images/logo/home-logo.png"
+                alt="Logo"
+                width={120}
+                height={40}
+                className="object-contain w-16   "
+                priority
               />
-            </Link>
+              <h1 className="ml-2 text-xl font-bold text-center ">CoverageGrader</h1></Link>
           </div>
 
           {/* Nav menu */}
