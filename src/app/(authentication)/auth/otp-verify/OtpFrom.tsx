@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { useForgetOtpVerifyMutation, useForgetResendOtpMutation, useResendOtpMutation } from "@/app/api/website/auth/authApi";
+import { useForgetOtpVerifyMutation, useForgetResendOtpMutation } from "@/app/api/website/auth/authApi";
 
 export default function OtpFrom() {
     const searchParams = useSearchParams();
@@ -38,7 +38,7 @@ export default function OtpFrom() {
                 localStorage.setItem("resetToken", res?.data?.reset_token ?? "");
                 setNumber(undefined);
                 if (token) {
-                    router.push("/auth/new-password-set");
+                    router.push(`/auth/new-password-set?email=${emailFromUrl}`);
                 }
             }
         } catch (err) {

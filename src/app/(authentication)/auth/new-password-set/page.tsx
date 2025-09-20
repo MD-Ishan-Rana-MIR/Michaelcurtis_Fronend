@@ -1,12 +1,14 @@
-import React from 'react'
-import NewPasswordFrom from './NewPasswordFrom'
+import React, { Suspense } from "react";
+import NewPasswordFrom from "./NewPasswordFrom";
 
 const Page: React.FC = () => {
     return (
         <div>
-            <NewPasswordFrom></NewPasswordFrom>
+            <Suspense fallback={<div>Loading...</div>}>
+                <NewPasswordFrom />
+            </Suspense>
         </div>
-    )
-}
+    );
+};
 
-export default Page
+export default Page;

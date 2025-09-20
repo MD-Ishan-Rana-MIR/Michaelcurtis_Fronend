@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import UserOtpVerfifyFrom from './UserOtpVerfifyFrom'
 
 const Page: React.FC = () => {
     return (
         <div>
-            <UserOtpVerfifyFrom />
+            <Suspense fallback={<p>Loading...</p>} >
+                <UserOtpVerfifyFrom />
+            </Suspense>
         </div>
     )
 }
