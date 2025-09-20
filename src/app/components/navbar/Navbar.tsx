@@ -137,7 +137,7 @@ const Navbar = () => {
                     Login
                   </button>
                   <Link href="/auth/sign-up">
-                    <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full">
+                    <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full cursor-pointer ">
                       Sign Up
                     </button>
                   </Link>

@@ -444,7 +444,7 @@ const ProviderBanner = () => {
                                                         </div>
                                                         <div className="flex flex-col space-y-1  ">
                                                             <span className=" px-5 py-2 bg-[#E9EAEB] rounded-[9px] font-normal text-sm lg:text-xl ">4.9</span>
-                                                            <span className="text-center lg:text-xl text-sm font-thin text-black ">Digital</span>
+                                                            <span className="text-center lg:text-xl text-sm font-thin text-black ">Trust</span>
                                                         </div>
                                                     </div>
                                                     <div className=' flex items-center mt-3 gap-x-3 ' >
