@@ -1,22 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useRegistrationApiMutation } from "@/app/api/website/auth/authApi";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [email, setEmail] = useState<string | undefined>("");
+    const [email, setEmail] = useState<string | number>("");
     const [password, setPassword] = useState<string | undefined>("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [firstName, setFirstName] = useState<string | undefined>("");
     const [lastName, setLastName] = useState<string | undefined>("");
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     const [confirmPassword, setConfirmPassword] = useState<string | undefined>("");
+    const payload = {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: password,
+        password_confirmation: confirmPassword
+    }
+    const [registrationApi, { isLoading }] = useRegistrationApiMutation();
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            const res = await registrationApi(payload).unwrap();
+            if (res) {
+                toast.success(res?.message);
+                setEmail("");
+                setPassword("");
+                setRememberMe(false);
+                setFirstName("");
+                setLastName("");
+                setConfirmPassword("");
+                router.push(`/auth/user-otp-verify?email=${encodeURIComponent(email)}`);
+
+            }
+
+        } catch (err: unknown) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+
+    }
 
     return (
-        <div className="     max-w-4xl mx-auto  " >
+        <div className=" max-w-4xl mx-auto  " >
 
             <div>
                 <Link href={"/"}>
@@ -43,7 +82,7 @@ export default function LoginForm() {
                     </div>
 
                     <div className=" lg:mt-10 mt-5 " >
-                        <form className="space-y-4">
+                        <form onSubmit={handleSubmit} className="space-y-4">
                             <div className=" flex flex-col md:flex-row justify-between gap-x-4  space-y-4 md:space-y-0 " >
                                 {/* First Name */}
                                 <div className=" flex-1 " >
@@ -58,6 +97,7 @@ export default function LoginForm() {
                                         id="First_Name"
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
+                                        required
                                         className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]  "
                                         // placeholder="Enter your email"
                                         style={{
@@ -77,6 +117,7 @@ export default function LoginForm() {
                                         type="text"
                                         id="Last_Name"
                                         value={lastName}
+                                        required
                                         onChange={(e) => setLastName(e.target.value)}
                                         className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]"
                                         // placeholder="Enter your email"
@@ -100,6 +141,7 @@ export default function LoginForm() {
                                         type="email"
                                         id="email"
                                         value={email}
+                                        required
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px] "
                                         // placeholder="Enter your email"
@@ -121,7 +163,8 @@ export default function LoginForm() {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]   "
-                                        // placeholder="********"
+                                            // placeholder="********"
+                                            required
                                         />
                                         <button
                                             type="button"
@@ -141,6 +184,7 @@ export default function LoginForm() {
                                             id="confirm_password"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
                                             className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]   "
                                         // placeholder="********"
                                         />
@@ -175,7 +219,14 @@ export default function LoginForm() {
                                 type="submit"
                                 className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor text-lg font-bold "
                             >
-                                Create Account
+
+                                {
+                                    isLoading ? <>
+                                        <p>
+                                            loading...
+                                        </p>
+                                    </> : <>Create Account</>
+                                }
                             </button>
                         </form>
                     </div>
