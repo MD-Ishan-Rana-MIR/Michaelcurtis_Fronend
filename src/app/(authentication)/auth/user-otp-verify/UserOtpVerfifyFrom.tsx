@@ -11,9 +11,11 @@ import { toast } from "sonner";
 export default function UserOtpVerfifyFrom() {
     const searchParams = useSearchParams();
     const emailFromUrl = searchParams.get("email");
-    const [otp, setOtp] = useState<number | undefined>();
+    const [otp, setOtp] = useState<string | undefined>();
 
     const router = useRouter();
+
+    console.log(router)
 
     // otp verify 
 
@@ -29,7 +31,7 @@ export default function UserOtpVerfifyFrom() {
             const res = await otpVerify(payload).unwrap();
             if (res) {
                 console.log(res)
-                setOtp(0);
+                setOtp("");
             }
         } catch (err) {
             const error = err as FetchBaseQueryError & { data?: { message?: string } };

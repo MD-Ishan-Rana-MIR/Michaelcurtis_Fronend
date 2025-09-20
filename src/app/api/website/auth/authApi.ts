@@ -1,5 +1,5 @@
 // redux/services/api.ts
-import { EmailVerifyApiPayload, EmailVerifyApiResponse, ForgetOtpVerifyApiResponse, OtpVerifyApiPayload, OtpVerifyApiResponse, OtpVeriryApiPayload, RegistrationApiPayload, RegistrationApiResponse } from "@/utility/types/authType";
+import { EmailVerifyApiPayload, EmailVerifyApiResponse, ForgetOtpVerifyApiResponse, NewPasswordSetApiPayload, NewPasswordSetApiRespone, OtpVerifyApiPayload, OtpVerifyApiResponse, OtpVeriryApiPayload, RegistrationApiPayload, RegistrationApiResponse } from "@/utility/types/authType";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
@@ -76,7 +76,7 @@ export const authApi = createApi({
             })
         }),
 
-        newPasswordSetApi: builder.mutation({
+        newPasswordSetApi: builder.mutation<NewPasswordSetApiRespone, NewPasswordSetApiPayload>({
             query: (paylod) => ({
                 url: `/auth/reset-password-with-token`,
                 method: "POST",

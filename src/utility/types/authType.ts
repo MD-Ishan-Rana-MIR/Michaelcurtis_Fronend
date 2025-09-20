@@ -89,7 +89,25 @@ export interface ForgetOtpVerifyApiResponse {
     data: UserToken | null;
 }
 
+// {
+//     "ok": true,
+//     "message": "Password has been successfully reset.",
+//     "data": []
+// }
+
+
+export interface NewPasswordSetApiRespone {
+    ok: boolean;
+    message: string;
+    data: string[]
+}
 
 
 
 
+export interface NewPasswordSetApiPayload {
+    email: string | undefined;
+    reset_token: string | undefined;
+    password: string | undefined;
+    password_confirmation: string | undefined
+}
