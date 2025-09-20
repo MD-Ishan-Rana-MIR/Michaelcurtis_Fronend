@@ -5,12 +5,40 @@ import Image from "next/image";
 import MaxWidth from "@/app/components/max-width/MaxWidth";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useLoginOtpMutation } from "@/app/api/website/auth/authApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
 
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [email, setEmail] = useState<string | undefined>("");
     const [password, setPassword] = useState<string | undefined>("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
+
+    const [loginOtp, { isLoading }] = useLoginOtpMutation();
+    const payload = {
+        email,
+        password
+    }
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            const res = await loginOtp(payload).unwrap();
+            if (res) {
+                setEmail("");
+                setPassword("");
+                setRememberMe(false)
+                console.log(res)
+                toast.success(res?.message);
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    }
 
 
     return (
@@ -41,7 +69,7 @@ export default function LoginForm() {
                         </div>
 
                         <div className=" lg:mt-10 mt-5 " >
-                            <form className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-4">
 
 
 
@@ -112,7 +140,9 @@ export default function LoginForm() {
                                     type="submit"
                                     className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor text-lg font-bold "
                                 >
-                                    Login
+                                    {
+                                        isLoading ? "loading.." : "Login"
+                                    }
                                 </button>
                             </form>
                         </div>

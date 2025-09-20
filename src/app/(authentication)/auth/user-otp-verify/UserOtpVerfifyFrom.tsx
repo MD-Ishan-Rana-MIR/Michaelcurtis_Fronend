@@ -4,26 +4,75 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useOtpVerifyMutation, useResendOtpMutation } from "@/app/api/website/auth/authApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
 
 export default function UserOtpVerfifyFrom() {
     const searchParams = useSearchParams();
     const emailFromUrl = searchParams.get("email");
-    const [email, setEmail] = useState<string | undefined>("");
+    const [otp, setOtp] = useState<number | undefined>();
 
     const router = useRouter();
 
+    // otp verify 
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [otpVerify, { isLoading }] = useOtpVerifyMutation()
+
+    const payload = {
+        email: emailFromUrl,
+        otp
+    }
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        router.push("/auth/new-password-set")
+        try {
+            const res = await otpVerify(payload).unwrap();
+            if (res) {
+                console.log(res)
+                setOtp(0);
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
     };
 
-    alert(emailFromUrl)
+
+
+
+    // resend otp 
+
+
+    const [resendOtp] = useResendOtpMutation();
+
+
+    const handleResendOtp = async () => {
+        const payload = {
+            email: emailFromUrl,
+            otp: 0 // Provide a default value for otp as required by OtpVerifyApiPayload
+        }
+        try {
+            const res = await resendOtp(payload).unwrap()
+            if (res) {
+                toast.success(res?.message)
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+
+        }
+    }
+
+
 
 
 
     return (
-        <div className="     max-w-4xl mx-auto  " >
+        <div className="max-w-4xl mx-auto  " >
 
             <div>
                 <Link href={"/"}>
@@ -63,17 +112,17 @@ export default function UserOtpVerfifyFrom() {
                                         >
                                             Verification Code
                                         </label>
-                                        <h1 className=" text-[#D09A40] lg:text-xl text-xs font-normal cursor-pointer " >Resend Code</h1>
+                                        <h1 onClick={handleResendOtp} className=" text-[#D09A40] lg:text-xl text-xs font-normal cursor-pointer " >Resend Code</h1>
                                     </div>
                                     <input
-                                        type="email"
-                                        id="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px] "
-                                        // placeholder="Enter your email"
+                                        type="number"
+                                        id="otp"
+                                        value={otp} // replace 'email' state with 'otp' state
+                                        onChange={(e) => setOtp(e.target.value)}
+                                        className="w-full px-4 py-4 border border-[#989DA3] focus:outline-none focus:ring-0 rounded-[10px]"
+                                        placeholder="Enter your code"
                                         style={{
-                                            boxShadow: "0 4px 10px rgba(248, 242, 229, 0.8)", // custom shadow color
+                                            boxShadow: "0 4px 10px rgba(248, 242, 229, 0.8)",
                                         }}
                                     />
                                 </div>
@@ -87,7 +136,9 @@ export default function UserOtpVerfifyFrom() {
                                 type="submit"
                                 className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor text-lg font-bold "
                             >
-                                Send Code
+                                {
+                                    isLoading ? "Submiting..." : "Send Code"
+                                }
                             </button>
                         </form>
                     </div>

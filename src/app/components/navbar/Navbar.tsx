@@ -130,12 +130,14 @@ const Navbar = () => {
                 </div>
               ) : (
                 <>
-                  <button
-                    className="px-6 py-2 text-black border border-gray-400 rounded-full"
-                    onClick={() => setIsLoggedIn(true)}
-                  >
-                    Login
-                  </button>
+                  <Link href={"/auth/login"}>
+                    <button
+                      className="px-6 py-2 text-black border border-gray-400 rounded-full cursor-pointer "
+
+                    >
+                      Login
+                    </button>
+                  </Link>
                   <Link href="/auth/sign-up">
                     <button className="px-6 py-2 text-white bg-[#D09A40] rounded-full cursor-pointer ">
                       Sign Up
