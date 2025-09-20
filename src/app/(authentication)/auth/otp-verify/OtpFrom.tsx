@@ -3,17 +3,80 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useForgetOtpVerifyMutation, useForgetResendOtpMutation, useResendOtpMutation } from "@/app/api/website/auth/authApi";
 
 export default function OtpFrom() {
-    const [email, setEmail] = useState<string | undefined>("");
+    const searchParams = useSearchParams();
+    const emailFromUrl = searchParams.get("email");
+    const [number, setNumber] = useState<number | undefined>();
 
     const router = useRouter();
 
+    // otp verify 
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const [forgetOtpVerify, { isLoading }] = useForgetOtpVerifyMutation();
+
+    const payload = {
+        email: emailFromUrl,
+        otp: number
+    }
+
+
+    const token = localStorage.getItem("resetToken")
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        router.push("/auth/new-password-set")
+
+        try {
+            const res = await forgetOtpVerify(payload).unwrap();
+            if (res) {
+                toast.success(res?.message);
+                localStorage.setItem("resetToken", res?.data?.reset_token ?? "");
+                setNumber(undefined);
+                if (token) {
+                    router.push("/auth/new-password-set");
+                }
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    };
+
+
+    // resend otp 
+
+
+    const [forgetResendOtp] = useForgetResendOtpMutation();
+
+
+
+    const handleResendOtp = async () => {
+        const payload = {
+            email: emailFromUrl
+        }
+        try {
+
+            const res = await forgetResendOtp(payload).unwrap();
+
+            if (res) {
+                console.log(res)
+                toast.success(res?.message)
+            }
+
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
     }
 
 
@@ -59,17 +122,21 @@ export default function OtpFrom() {
                                         >
                                             Verification Code
                                         </label>
-                                        <h1 className=" text-[#D09A40] lg:text-xl text-xs font-normal cursor-pointer " >Resend Code</h1>
+                                        <h1 onClick={handleResendOtp} className=" text-[#D09A40] lg:text-xl text-xs font-normal cursor-pointer " >Resend Code</h1>
                                     </div>
                                     <input
-                                        type="email"
-                                        id="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px] "
-                                        // placeholder="Enter your email"
+                                        type="number"
+                                        id="number"
+                                        value={number}
+                                        onChange={(e) => {
+                                            // Allow only digits
+                                            const value = e.target.value.replace(/[^0-9]/g, "");
+                                            setNumber(value ? Number(value) : undefined);
+                                        }}
+                                        className="w-full px-4 py-4 border border-[#989DA3] focus:outline-none focus:ring-0 rounded-[10px]"
+                                        placeholder="Enter number"
                                         style={{
-                                            boxShadow: "0 4px 10px rgba(248, 242, 229, 0.8)", // custom shadow color
+                                            boxShadow: "0 4px 10px rgba(248, 242, 229, 0.8)",
                                         }}
                                     />
                                 </div>
@@ -83,7 +150,9 @@ export default function OtpFrom() {
                                 type="submit"
                                 className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor text-lg font-bold "
                             >
-                                Send Code
+                                {
+                                    isLoading ? "Submiting.." : "Verify Me"
+                                }
                             </button>
                         </form>
                     </div>
