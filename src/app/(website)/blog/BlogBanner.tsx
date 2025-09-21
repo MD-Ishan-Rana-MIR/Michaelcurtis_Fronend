@@ -14,7 +14,7 @@ type Blog = {
   category: "Coverage" | "Claims" | "Pricing" | "Digital Tool" | "Community";
 };
 
-const categories = ["All", "Coverage", "Claims", "Pricing", "Digital Tool", "Community"];
+const categories = ["All", "Coverage", "Claims", "Pricing", "Trust", "Community"];
 
 const blogs: Blog[] = [
   {

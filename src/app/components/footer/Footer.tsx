@@ -19,16 +19,18 @@ export default function Footer() {
 
                     {/* Logo + Description */}
                     <div className="flex-1 min-w-[200px] md:min-w-[250px] lg:min-w-[350px]">
-                        <Link href="/">
-                            <Image
-                                src="/images/footer/footer-1.png"
-                                width={349}
-                                height={100}
-                                className="w-[200px] md:w-[260px] lg:w-[349px]"
-                                alt="logo"
-                                priority
-                            />
-                        </Link>
+                        <div >
+                            <Link className=" flex items-center " href={"/"}>
+                                <Image
+                                    src="/images/logo/home-logo.png"
+                                    alt="Logo"
+                                    width={120}
+                                    height={40}
+                                    className="object-contain lg:w-20 w-10 h-10 lg:h-20  "
+                                    priority
+                                />
+                                <h1 className="lg:ml-2 text-sm lg:text-xl font-bold text-center ">CoverageGrader</h1></Link>
+                        </div>
                         <p className="mt-4 text-gray-600 text-sm sm:text-base md:text-lg  leading-relaxed">
                             Transparent insurance reviews powered <br />
                             by our community of real customers.
