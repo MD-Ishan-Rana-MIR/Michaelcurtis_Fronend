@@ -111,3 +111,73 @@ export interface NewPasswordSetApiPayload {
     password: string | undefined;
     password_confirmation: string | undefined
 }
+
+
+
+
+
+
+// login api 
+
+
+export interface LoginApiPayload {
+    email: string | undefined;
+    password: string | undefined
+}
+
+
+
+
+
+export interface Role {
+    id: number;
+    name: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+    pivot: {
+        model_type: string;
+        model_id: number;
+        role_id: number;
+    };
+}
+
+export interface Permission {
+    // currently empty array in response, but we can still type it
+    id?: number;
+    name?: string;
+    guard_name?: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface User {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    email_verified_at: string;
+    avatar: string;
+    contact_number?: string;
+    status: string;
+    joined_at?: string;
+    last_login_at?: string;
+    created_at: string;
+    updated_at: string;
+    full_name: string;
+    roles: Role[];
+    permissions: Permission[];
+}
+
+export interface LoginApiResponse {
+    ok: boolean;
+    message: string;
+    data: {
+        access_token: string;
+        token_type: string;
+        user: User;
+    };
+}
+
+
+

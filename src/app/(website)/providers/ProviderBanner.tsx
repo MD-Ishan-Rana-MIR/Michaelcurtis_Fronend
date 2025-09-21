@@ -161,7 +161,7 @@ const ProviderBanner = () => {
     return (
         <div>
             <MaxWidth>
-                <div className=' flex flex-col md:flex-row gap-x-6 my-10  lg:space-y-0 space-y-6 ' >
+                <div className=' flex flex-col md:flex-row gap-x-6 my-10  lg:space-y-0 space-y-6 mb-20 ' >
                     {/* left side  */}
                     <div className=' md:max-w-[20%]  flex-1 p-6 shadow-lg h-[80vh] w-full ' >
                         <div className=' flex justify-between ' >

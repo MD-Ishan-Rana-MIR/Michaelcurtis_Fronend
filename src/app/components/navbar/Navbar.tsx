@@ -17,7 +17,7 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Rankings", href: "/rankings" },
-    { name: "Providers", href: "/providers" },
+    { name: "Provider", href: "/providers" },
     { name: "Policies", href: "/policies" },
     { name: "Blog", href: "/blog" },
   ];
@@ -58,10 +58,10 @@ const Navbar = () => {
                 alt="Logo"
                 width={120}
                 height={40}
-                className="object-contain w-16   "
+                className="object-contain lg:w-20 lg:h-20 w-10 h-10     "
                 priority
               />
-              <h1 className="ml-2 text-xl font-bold text-center ">CoverageGrader</h1></Link>
+              <h1 className="lg:ml-2 text-sm lg:text-xl font-bold text-center">CoverageGrader</h1></Link>
           </div>
 
           {/* Nav menu */}

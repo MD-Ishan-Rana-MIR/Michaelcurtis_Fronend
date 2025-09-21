@@ -29,8 +29,9 @@ export default function LoginForm() {
                 setEmail("");
                 setPassword("");
                 setRememberMe(false)
-                console.log(res)
                 toast.success(res?.message);
+                localStorage.setItem("user_token", res?.data?.access_token);
+                window.location.href = "/"
             }
         } catch (err) {
             const error = err as FetchBaseQueryError & { data?: { message?: string } };
