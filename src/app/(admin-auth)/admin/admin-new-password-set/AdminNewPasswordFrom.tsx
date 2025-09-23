@@ -1,22 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useNewPasswordSetApiMutation } from "@/app/api/website/auth/authApi";
 
-export default function NewPasswordFrom() {
+export default function AdminNewPasswordFrom() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [password, setPassword] = useState<string | undefined>("");
-
+    const searchParams = useSearchParams();
+    const emailFromUrl = searchParams.get("email");
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     const [confirmPassword, setConfirmPassword] = useState<string | undefined>("");
     const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const reset_token = localStorage.getItem("resetToken");
+
+    useEffect(() => {
+        if (!reset_token) {
+            router.push("/auth/otp-verify")
+        }
+    }, [reset_token, router]);
+
+    const payload = {
+        email: emailFromUrl ?? undefined,
+        reset_token: reset_token ?? undefined,
+        password: password,
+        password_confirmation: confirmPassword
+    }
+
+    const [newPasswordSetApi, { isLoading }] = useNewPasswordSetApiMutation();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        router.push("/")
+
+        try {
+            const res = await newPasswordSetApi(payload).unwrap();
+            if (res) {
+                console.log(res);
+                router.push("/admin/login")
+                toast.success(res?.message);
+                localStorage.removeItem("resetToken")
+            }
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
 
     }
 
@@ -60,6 +96,7 @@ export default function NewPasswordFrom() {
                                             id="password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
+                                            required
                                             className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]   "
                                         // placeholder="********"
                                         />
@@ -81,6 +118,7 @@ export default function NewPasswordFrom() {
                                             id="confirm_password"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
                                             className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]   "
                                         // placeholder="********"
                                         />
@@ -102,7 +140,9 @@ export default function NewPasswordFrom() {
                                 type="submit"
                                 className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor lg:text-2xl text--[16px] font-normal "
                             >
-                                Reset Password
+                                {
+                                    isLoading ? "Subminging.." : "Reset Password"
+                                }
                             </button>
                         </form>
                     </div>

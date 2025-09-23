@@ -1,17 +1,23 @@
 "use client";
 
+import { useSingleUserQuery, useUserDeleteMutation, useUserRoleUpdateMutation } from "@/app/api/admin/userApi";
+import { deleteAlert } from "@/helper/deleteAlert";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { FaChevronUp } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
+import { toast } from "sonner";
 
 type PolicyViewProps = {
     userViewModal: boolean;
     setUserViewModal: React.Dispatch<React.SetStateAction<boolean>>;
+    userId: number | undefined
 };
 
 const UserView: React.FC<PolicyViewProps> = ({
     userViewModal,
     setUserViewModal,
+    userId
 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const firstFocusableRef = useRef<HTMLButtonElement>(null);
@@ -30,6 +36,90 @@ const UserView: React.FC<PolicyViewProps> = ({
         setShowModal(false);
         setTimeout(() => setUserViewModal(false), 500);
     }, [setUserViewModal]);
+
+
+
+
+    const [open, setOpen] = useState(false);
+    const [selectedRole, setSelectedRole] = useState("admin");
+
+    const roles = ["admin", "user"];
+
+
+    const { data } = useSingleUserQuery(userId);
+
+
+    const singleUser = data?.data
+
+    console.log(singleUser);
+
+
+    const payload = {
+        role: selectedRole
+    };
+
+    const [userRoleUpdate, { isLoading }] = useUserRoleUpdateMutation();
+
+    const handleRoleUpdate = async () => {
+        try {
+
+            const res = await userRoleUpdate({ userId, payload }).unwrap();
+            if (res) {
+                console.log("-*----------------------------67", res);
+                toast.success(res?.message);
+                handleClose()
+            }
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    }
+
+
+    // user delete 
+
+
+    const [userDelete] = useUserDeleteMutation();
+
+    const handleDeleteUser = async () => {
+        try {
+            if (userId === undefined) {
+                toast.error("User ID is missing.");
+                return;
+            }
+
+
+            const res = await deleteAlert();
+
+            if (res.isConfirmed) {
+                const res = await userDelete({ userId }).unwrap();
+
+                if (res) {
+                    toast.success(res?.message)
+                    handleClose()
+                }
+            }
+
+
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    }
+
+
+
+
+
+
+
+
 
     return (
         <>
@@ -60,25 +150,30 @@ const UserView: React.FC<PolicyViewProps> = ({
                         ✕
                     </button>
 
+
                     {/* User Info */}
                     <div className="flex items-center gap-x-6">
-                        <div>
+                        <div className="w-16 h-16 rounded-full border-2 border-[#BD8C3A]   " >
                             <Image
-                                src={"/images/user/user.png"}
+                                src={singleUser?.avatar}
                                 width={64}
                                 height={64}
                                 alt=""
-                                className="rounded-full"
+                                className="rounded-full  w-16 h-16 p-1 "
                             />
                         </div>
                         <div>
                             <h1 className="text-[#000000] text-3xl">John Doe</h1>
                             <div className="mt-2 space-x-3">
                                 <button className="bg-[#F5E1F8] px-3.5 py-1 rounded-xl text-[#A4429E] text-sm">
-                                    User
+                                    {
+                                        singleUser?.main_role
+                                    }
                                 </button>
                                 <button className="bg-[#C8FFD1] px-3.5 py-1 rounded-xl text-[#24983F] text-sm">
-                                    Active
+                                    {
+                                        singleUser?.status
+                                    }
                                 </button>
                             </div>
                         </div>
@@ -89,7 +184,7 @@ const UserView: React.FC<PolicyViewProps> = ({
                         <h1 className=" text-[27px] "  >Basic Information</h1>
                         <div className=" flex items-center justify-between mt-4 " >
                             <h1 className=" text-lg font-thin " >Email</h1>
-                            <h1 className="text-lg" >example@gmail.com</h1>
+                            <h1 className="text-lg" >{singleUser?.email}</h1>
                         </div>
                         <div className=" bg-[#989DA3] w-full h-0.5 mt-2.5 " >
 
@@ -97,7 +192,8 @@ const UserView: React.FC<PolicyViewProps> = ({
 
                         <div className=" flex items-center justify-between mt-4 " >
                             <h1 className=" text-lg font-thin " >Join Date</h1>
-                            <h1 className="text-lg" >2024-08-15</h1>
+                            <h1 className="text-lg" >{
+                                singleUser?.joined_at}</h1>
                         </div>
                         <div className=" bg-[#989DA3] w-full h-0.5 mt-2.5 " >
 
@@ -106,7 +202,8 @@ const UserView: React.FC<PolicyViewProps> = ({
 
                         <div className=" flex items-center justify-between mt-4 " >
                             <h1 className=" text-lg font-thin " >Last Login</h1>
-                            <h1 className="text-lg" >2024-08-15</h1>
+                            <h1 className="text-lg" >{
+                                singleUser?.last_login_at}</h1>
                         </div>
                         <div className=" bg-[#989DA3] w-full h-0.5 mt-2.5 " >
 
@@ -117,19 +214,40 @@ const UserView: React.FC<PolicyViewProps> = ({
 
                     {/* client role  */}
 
-                    <div className=" mt-9 bg-[#FAF5EC] shadow shadow-[#00000040] rounded-[14px] pt-5 pb-10 px-5 " >
+                    <div className="mt-9 bg-[#FAF5EC] shadow shadow-[#00000040] rounded-[14px] pt-5 pb-10 px-5">
+                        <h1 className="text-[27px]">Assigned Role</h1>
 
-                        <h1 className=" text-[27px] "  >Assigned Role</h1>
-                        <div className=" flex items-center justify-between mt-4 " >
-                            <h1 className=" text-lg font-thin " >Admin</h1>
-                            <h1 className="text-lg cursor-pointer " ><FaChevronUp /> </h1>
+                        {/* Dropdown Header */}
+                        <div
+                            className="flex items-center justify-between mt-4 cursor-pointer"
+                            onClick={() => setOpen(!open)}
+                        >
+                            <h1 className="text-lg font-thin">{selectedRole}</h1>
+                            <h1 className="text-lg">
+                                {open ? <FaChevronUp /> : <FaChevronDown />}
+                            </h1>
                         </div>
-                        <div className=" bg-[#989DA3] w-full h-0.5 mt-2.5 " >
 
-                        </div>
+                        <div className="bg-[#989DA3] w-full h-0.5 mt-2.5"></div>
 
-
-
+                        {/* Dropdown List */}
+                        {open && (
+                            <div className="mt-3 bg-white shadow-md rounded-md overflow-hidden">
+                                {roles.map((role, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => {
+                                            setSelectedRole(role);
+                                            setOpen(false);
+                                        }}
+                                        className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-100 ${selectedRole === role ? "bg-gray-200 font-semibold" : ""
+                                            }`}
+                                    >
+                                        {role}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
 
@@ -169,7 +287,7 @@ const UserView: React.FC<PolicyViewProps> = ({
                     {/* Action Buttons */}
                     <div className="flex justify-end space-x-4 mt-8">
                         <button
-                            onClick={handleClose}
+                            onClick={handleDeleteUser}
                             className=" cursor-pointer flex items-center space-x-2 px-8 py-3 text-[#FFFFFF] gap-x-1 rounded-[36px] border border-[#D09A40] transition bg-[#D93939] "
                         >
                             <span>
@@ -180,10 +298,17 @@ const UserView: React.FC<PolicyViewProps> = ({
                             </span>
                             Delete
                         </button>
-                        <button className=" cursor-pointer px-8 py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
-                            SAVE
+                        <button disabled={isLoading} onClick={handleRoleUpdate} className=" cursor-pointer px-8 py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                            {
+                                isLoading ? "Loading..." : "SAVE"
+                            }
                         </button>
                     </div>
+
+
+
+
+
                 </div>
             )}
         </>

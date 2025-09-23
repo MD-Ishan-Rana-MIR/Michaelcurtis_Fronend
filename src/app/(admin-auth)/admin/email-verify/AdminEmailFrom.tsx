@@ -4,16 +4,41 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEmailVerifyMutation } from "@/app/api/website/auth/authApi";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-export default function OtpFrom() {
+export default function AdminEmailFrom() {
     const [email, setEmail] = useState<string | undefined>("");
 
     const router = useRouter();
 
+    const [emailVerify, { isLoading }] = useEmailVerifyMutation();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const payload = {
+        email
+    }
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        router.push("/admin/new-password-set")
+        try {
+
+            const res = await emailVerify(payload).unwrap();
+
+            if (res) {
+                toast.success(res?.message);
+                setEmail("");
+                router.push(`/admin/admin-otp-verify?email=${email}`)
+            }
+
+
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
     }
 
 
@@ -37,7 +62,7 @@ export default function OtpFrom() {
 
                     </div>
                     <div className=" mt-7 lg:mt-14 text-center  " >
-                        <h1 className=" font-normal lg:text-5xl text-xl text-[#000000] " >Verify your email address</h1>
+                        <h1 className=" font-normal lg:text-5xl text-xl text-[#000000] " >Forgot Password</h1>
                         <p className=" lg:mt-5 mt-2.5 font-normal text-[#000000] lg:text-xl text-xs  " >
                             Enter the email address associated with your account.
                         </p>
@@ -50,20 +75,18 @@ export default function OtpFrom() {
 
 
                             <div>
-                                {/* Verification Code */}
+                                {/* Email */}
                                 <div>
-                                    <div className=" flex  justify-between items-start " >
-                                        <label
-                                            className="text-[#000000] mb-4 block lg:text-xl text-xs  font-normal"
-                                            htmlFor="email"
-                                        >
-                                            Verification Code
-                                        </label>
-                                        <h1 className=" text-[#D09A40] lg:text-xl text-xs font-normal cursor-pointer " >Resend Code</h1>
-                                    </div>
+                                    <label
+                                        className="text-[#000000] mb-4 block lg:text-xl text-xs  font-normal"
+                                        htmlFor="email"
+                                    >
+                                        Email
+                                    </label>
                                     <input
                                         type="email"
                                         id="email"
+                                        required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px] "
@@ -83,7 +106,9 @@ export default function OtpFrom() {
                                 type="submit"
                                 className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor text-lg font-bold "
                             >
-                                Send Code
+                                {
+                                    isLoading ? <> <span>Loading...</span> </> : <span>Send Code</span>
+                                }
                             </button>
                         </form>
                     </div>

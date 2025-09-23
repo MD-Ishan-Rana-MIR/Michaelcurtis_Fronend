@@ -181,3 +181,83 @@ export interface LoginApiResponse {
 
 
 
+// user or admin profile api 
+
+
+export interface UserRole {
+    id: number;
+    name: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+    pivot: {
+        model_type: string;
+        model_id: number;
+        role_id: string
+
+    }
+}
+
+
+export interface UserData {
+    id: number;
+    avatar: string;
+    full_name: string;
+    email: string;
+    main_role?: string;
+    contact_number: string;
+    address: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+    joined_at: string;
+    last_login_at: string;
+    first_name: string;
+    roles: UserRole;
+
+}
+
+
+export interface ProfileApiResponse {
+    data: UserData | undefined
+}
+
+
+// profile update api 
+
+export interface UserProfileData {
+    id: number;
+    full_name: string;
+    email: string;
+    avatar: string;
+    contact_number: string;
+    address: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+    joined_at: string;
+    last_login_at: string;
+    first_name: string;
+}
+
+export interface ProfileUpdateApiResponse {
+
+    data: UserProfileData
+
+
+}
+
+
+export interface ProfileUpdatePayload {
+    first_name: string;
+    address: string; // যদি API optional, তবে empty string set করতে পারো
+    contact_number: string;
+    email: string;
+    avatar?: File;
+}
+
+
+export interface ProfileUpdate {
+
+    ProfileUpdatePayload: FormData
+}

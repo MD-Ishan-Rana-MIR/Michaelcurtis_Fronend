@@ -1,16 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import MaxWidth from "@/app/components/max-width/MaxWidth";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useLoginOtpMutation } from "@/app/api/website/auth/authApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
 
-export default function LoginForm() {
+export default function AdminLoginFrom() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [email, setEmail] = useState<string | undefined>("");
     const [password, setPassword] = useState<string | undefined>("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
+    const [loginOtp, { isLoading }] = useLoginOtpMutation();
+    const payload = {
+        email,
+        password
+    }
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            const res = await loginOtp(payload).unwrap();
+            console.log(res)
+            if (res) {
+                window.location.href = "/admin"
+                setEmail("");
+                setPassword("");
+                setRememberMe(false);
+                toast.success(res?.message);
+
+                // ✅ Set token in cookies (expires in 7 days)
+                Cookies.set("admin_token", res.data?.access_token, { expires: 7, secure: true, sameSite: "strict" });
+            }
+        } catch (err) {
+            console.log(err)
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message = error.data?.message || "Something went wrong ❌";
+            toast.error(message);
+        }
+    };
 
 
     return (
@@ -41,7 +73,7 @@ export default function LoginForm() {
                         </div>
 
                         <div className=" lg:mt-10 mt-5 " >
-                            <form className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-4">
 
 
 
@@ -57,6 +89,7 @@ export default function LoginForm() {
                                         <input
                                             type="email"
                                             id="email"
+                                            required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px] "
@@ -77,6 +110,7 @@ export default function LoginForm() {
                                                 type={showPassword ? "text" : "password"}
                                                 id="password"
                                                 value={password}
+                                                required
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 className="w-full px-4 py-4 border-1 border-[#989DA3] focus:outline-none focus:ring-0   rounded-[10px]   "
                                             // placeholder="********"
@@ -109,10 +143,13 @@ export default function LoginForm() {
 
                                 {/* Submit Button */}
                                 <button
+                                    disabled={isLoading}
                                     type="submit"
                                     className="w-full lg:mt-12 mt-5 cursor-pointer  text-white py-4 px-2 rounded-[8px] btnColor text-lg font-bold "
                                 >
-                                    Login
+                                    {
+                                        isLoading ? "Submiting..." : "Login"
+                                    }
                                 </button>
                             </form>
                         </div>

@@ -1,10 +1,10 @@
 import React from 'react'
-import EmailFrom from './EmailFrom'
+import AdminEmailFrom from './AdminEmailFrom'
 
 const Page: React.FC = () => {
     return (
         <div>
-            <EmailFrom></EmailFrom>
+            <AdminEmailFrom></AdminEmailFrom>
         </div>
     )
 }

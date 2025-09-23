@@ -58,7 +58,7 @@ const Banner = () => {
                         </div >
                         {/* right side  */}
                         <div className=' w-full  lg:max-w-[45%] mx-auto  ' >
-                            <Image src={"/images/home/banner/banner-image.png"} width={1500} height={1500} alt='banner' className=' object-cover ' />
+                            <Image src={"/images/home/banner/banner-image.png"} width={1500} height={1500} alt='banner' className=' object-cover  ' />
                         </div>
                     </div>
                 </div>

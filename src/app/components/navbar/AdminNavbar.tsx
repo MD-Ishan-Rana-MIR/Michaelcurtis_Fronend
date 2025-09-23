@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 import Link from "next/link";
+import { useAdminProfileQuery } from "@/app/api/website/auth/authApi";
 
 const AdminNavbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -20,6 +21,12 @@ const AdminNavbar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+
+    const { data } = useAdminProfileQuery(undefined);
+
+
+    const userData = data?.data
 
     return (
         <nav className="w-full bg-[#FAF5EC]  px-6 py-4 flex items-center justify-between sticky top-0 z-50">
@@ -50,14 +57,14 @@ const AdminNavbar = () => {
                 <div className="relative" ref={dropdownRef}>
                     <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300"
+                        className=" rounded-full overflow-hidden border-2 border-gray-300"
                     >
                         <Image
-                            src="/images/admin.jpg" // place your admin image in public/images
+                            src={userData?.avatar ?? "/images/default-avatar.png"} // place your admin image in public/images
                             alt="Admin"
                             width={500}
                             height={500}
-                            className="object-cover w-[68px] h-[68px] cursor-pointer "
+                            className="object-cover w-14 h-14 cursor-pointer "
                         />
                     </button>
 
@@ -67,6 +74,7 @@ const AdminNavbar = () => {
                             <ul className="py-2 text-gray-700">
                                 <li>
                                     <Link
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
                                         href="/admin/settings"
                                         className=" px-4 py-2 hover:bg-gray-100 flex flex-row items-center gap-x-10"
                                     >
@@ -84,6 +92,7 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <Link
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
                                         href="/admin/settings"
                                         className=" px-4 py-2 hover:bg-gray-100 flex flex-row items-center gap-x-10 "
                                     >

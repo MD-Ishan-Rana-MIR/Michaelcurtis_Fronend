@@ -1,11 +1,11 @@
 
 import React from 'react'
-import LoginFrom from './LoginFrom'
+import AdminLoginFrom from './AdminLoginFrom';
 
 const Page: React.FC = () => {
     return (
         <div>
-            <LoginFrom></LoginFrom>
+            <AdminLoginFrom />
         </div>
     )
 }
