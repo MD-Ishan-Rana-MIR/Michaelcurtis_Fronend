@@ -12,7 +12,7 @@ const DetailsBanner = () => {
         { label: "Service", value: 4.7, color: "bg-green-500" },
         { label: "Pricing", value: 4.8, color: "bg-yellow-500" },
         { label: "Coverage", value: 4.8, color: "bg-green-500" },
-        { label: "Digital Tools", value: 4.8, color: "bg-green-500" },
+        { label: "Trusts Tools", value: 4.8, color: "bg-green-500" },
     ];
     const router = useRouter();
     const handleReview = () => {

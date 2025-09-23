@@ -2,15 +2,21 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Editor, EditorTextChangeEvent } from "primereact/editor";
+import { usePolicyUpdateMutation, useSinglePolicyQuery } from "@/app/api/admin/policyApi";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { updateAlert } from "@/helper/updertAlert";
 
 type PolicyViewProps = {
     policyUpdateModal: boolean;
     setPolicyUpdateModal: React.Dispatch<React.SetStateAction<boolean>>;
+    policySlug: string | undefined
 };
 
 const PolicyUpdate: React.FC<PolicyViewProps> = ({
     policyUpdateModal,
     setPolicyUpdateModal,
+    policySlug
 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const [showModal, setShowModal] = useState(false);
@@ -43,12 +49,26 @@ const PolicyUpdate: React.FC<PolicyViewProps> = ({
     // logo 
 
 
-    const [logo, setLogo] = useState<File | null>(null);
 
-    console.log(logo)
 
+
+
+
+
+
+
+
+    const policyId = policySlug
+
+    const { data } = useSinglePolicyQuery(policyId);
 
     const [preview, setPreview] = useState<string | null>(null);
+    const [status, setStatus] = useState(true);
+    console.log(status)
+    const [categoryName, setCategoryName] = useState("");
+    const [logo, setLogo] = useState<File | null>(null);
+
+
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -63,6 +83,59 @@ const PolicyUpdate: React.FC<PolicyViewProps> = ({
     const handleEditorChange = (e: EditorTextChangeEvent) => {
         setEditorValue(e.htmlValue ?? "");
     };
+
+    const [active, setActive] = useState(true); // true = Active, false = Inactive
+
+    useEffect(() => {
+        if (data?.data) {
+            setStatus(data?.data.status);
+            setCategoryName(data?.data.name);
+            setPreview(data?.data.logo_url); // show logo from API
+            setEditorValue(data?.data.description);
+        }
+    }, [data]);
+
+
+
+
+    const [policyUpdate] = usePolicyUpdateMutation();
+
+
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("status", active ? "active" : "inactive");
+        formData.append("name", categoryName);
+        formData.append("_method", "PUT");
+        if (logo) formData.append("logo_url", logo);
+        formData.append("description", editorValue);
+
+        try {
+            const res = await updateAlert();
+            if (res.isConfirmed) {
+                const res = await policyUpdate({ policySlug, formData }).unwrap();
+                if (res) {
+                    toast.success(res?.message)
+                }
+            }
+
+        } catch (err) {
+            console.log(err)
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    };
+
+
+
+
+
+
 
     return (
         <>
@@ -92,116 +165,120 @@ const PolicyUpdate: React.FC<PolicyViewProps> = ({
                     <h1 className=" text-black text-4xl font-normal">Update Policy Category</h1>
                 </div>
 
-                <div className="mt-8 flex items-center gap-x-10">
-                    <h1 className="text-lg font-normal text-black">Status</h1>
-                    <span className="cursor-pointer">
-                        <svg width="67" height="26" viewBox="0 0 67 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_411_3415)">
-                                <rect width="67" height="26" rx="13" fill="#45E03C" />
-                                <g filter="url(#filter0_d_411_3415)">
-                                    <circle cx="52.5" cy="13.5" r="9.5" fill="white" />
-                                </g>
-                            </g>
-                            <defs>
-                                <filter id="filter0_d_411_3415" x="35.7" y="-3.3" width="33.6" height="33.6" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                    <feOffset />
-                                    <feGaussianBlur stdDeviation="3.65" />
-                                    <feComposite in2="hardAlpha" operator="out" />
-                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_411_3415" />
-                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_411_3415" result="shape" />
-                                </filter>
-                                <clipPath id="clip0_411_3415">
-                                    <rect width="67" height="26" rx="13" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
+                <form onSubmit={handleSubmit}  >
+                    <div className="mt-8 flex items-center gap-x-10">
+                        <h1 className="text-lg font-normal text-black">Status</h1>
+                        <span className="cursor-pointer flex items-center gap-x-5 ">
+                            <div
+                                onClick={() => {
+                                    setActive(!active);
 
-                    </span>
-                </div>
+                                }}
+                                className={`relative w-[67px] h-[26px] rounded-full cursor-pointer transition-colors ${active ? "bg-[#45E03C]" : "bg-gray-400"
+                                    }`}
+                            >
+                                {/* Circle */}
+                                <div
+                                    className={`absolute top-1/2 -translate-y-1/2 w-[19px] h-[19px] rounded-full bg-white shadow-md transition-all duration-300 ${active ? "right-1" : "left-1"
+                                        }`}
+                                ></div>
 
-                <div>
+                            </div>
+                            <span
+                                className={`text-sm font-medium ${active ? "text-green-600" : "text-red-500"
+                                    }`}
+                            >
+                                {active ? "active" : "inactive"}
+                            </span>
 
-                    <div className="mt-8">
-                        <label className="block  text-lg font-normal text-[#000000] mb-3 ">Category Name</label>
-                        <input
-                            type="text"
-                            className="w-full p-3 mt-2 border border-[#989DA3] rounded-md focus:outline-none focus:ring-0"
-                            // placeholder="Enter Provider Name"
-
-                            required
-                        />
+                        </span>
                     </div>
 
-                    <div className=" mt-4  " >
-                        <label className="block text-lg font-normal text-[#000000] mb-3">Logo</label>
-                        <div className="mt-2 w h-[150px] border border-dotted flex items-center justify-center relative">
-                            {/* Hidden File Input */}
+                    <div>
+
+                        <div className="mt-8">
+                            <label className="block  text-lg font-normal text-[#000000] mb-3 ">Category Name</label>
                             <input
-                                type="file"
-                                id="logoUpload"
-                                className="hidden"
-                                accept="image/png, image/jpeg, image/gif"
-                                onChange={handleLogoChange}
+                                type="text"
+                                className="w-full p-3 mt-2 border border-[#989DA3] rounded-md focus:outline-none focus:ring-0"
+                                value={categoryName}
+                                onChange={(e) => setCategoryName(e.target.value)}
+                                required
                             />
-
-                            {/* Custom Upload Button */}
-                            <label
-                                htmlFor="logoUpload"
-                                className="cursor-pointer flex flex-col items-center justify-center"
-                            >
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M36.6667 19.9999C36.6667 27.8566 36.6667 31.7849 34.225 34.2249C31.7867 36.6666 27.8567 36.6666 20 36.6666C12.1434 36.6666 8.21504 36.6666 5.77337 34.2249C3.33337 31.7866 3.33337 27.8566 3.33337 19.9999C3.33337 12.1433 3.33337 8.21492 5.77337 5.77325C8.21671 3.33325 12.1434 3.33325 20 3.33325" stroke="#989DA3" strokeWidth="2" strokeLinecap="round" />
-                                    <path d="M3.33337 20.8333L6.25337 18.2783C6.98527 17.6384 7.93295 17.3005 8.90458 17.333C9.8762 17.3655 10.7992 17.7659 11.4867 18.4533L18.6367 25.6033C19.1916 26.158 19.9243 26.4992 20.706 26.5669C21.4876 26.6346 22.2681 26.4244 22.91 25.9733L23.4084 25.6233C24.3344 24.9729 25.4536 24.6559 26.5831 24.724C27.7126 24.7921 28.7856 25.2413 29.6267 25.9983L35 30.8333M25 9.16659H30.8334M30.8334 9.16659H36.6667M30.8334 9.16659V14.9999M30.8334 9.16659V3.33325" stroke="#989DA3" strokeWidth="2" strokeLinecap="round" />
-                                </svg>
-
-                                <span className=" text-[16px] font-normal text-[#677BFF] mt-1.5 flex flex-row ">Upload a fill <p className=" font-thin text-black " >or drag and drop</p> </span>
-                                <h1 className="text-xs font-thin" >PNG,JPG,GIF up to 10 MB</h1>
-                            </label>
                         </div>
 
-                        {/* Image Preview */}
-                        {preview && (
-                            <div className="mt-3">
-                                <Image
-                                    src={preview}
-                                    width={100}
-                                    height={100}
-                                    alt="Logo Preview"
-                                    className="object-contain border rounded-md w-24 h-24"
+                        <div className=" mt-4  " >
+                            <label className="block text-lg font-normal text-[#000000] mb-3">Logo</label>
+                            <div className="mt-2 w h-[150px] border border-dotted flex items-center justify-center relative">
+                                {/* Hidden File Input */}
+                                <input
+                                    type="file"
+                                    id="logoUpload"
+                                    className="hidden"
+                                    accept="image/png, image/jpeg, image/gif"
+                                    onChange={handleLogoChange}
                                 />
-                            </div>
-                        )}
 
+                                {/* Custom Upload Button */}
+                                <label
+                                    htmlFor="logoUpload"
+                                    className="cursor-pointer flex flex-col items-center justify-center"
+                                >
+                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M36.6667 19.9999C36.6667 27.8566 36.6667 31.7849 34.225 34.2249C31.7867 36.6666 27.8567 36.6666 20 36.6666C12.1434 36.6666 8.21504 36.6666 5.77337 34.2249C3.33337 31.7866 3.33337 27.8566 3.33337 19.9999C3.33337 12.1433 3.33337 8.21492 5.77337 5.77325C8.21671 3.33325 12.1434 3.33325 20 3.33325" stroke="#989DA3" strokeWidth="2" strokeLinecap="round" />
+                                        <path d="M3.33337 20.8333L6.25337 18.2783C6.98527 17.6384 7.93295 17.3005 8.90458 17.333C9.8762 17.3655 10.7992 17.7659 11.4867 18.4533L18.6367 25.6033C19.1916 26.158 19.9243 26.4992 20.706 26.5669C21.4876 26.6346 22.2681 26.4244 22.91 25.9733L23.4084 25.6233C24.3344 24.9729 25.4536 24.6559 26.5831 24.724C27.7126 24.7921 28.7856 25.2413 29.6267 25.9983L35 30.8333M25 9.16659H30.8334M30.8334 9.16659H36.6667M30.8334 9.16659V14.9999M30.8334 9.16659V3.33325" stroke="#989DA3" strokeWidth="2" strokeLinecap="round" />
+                                    </svg>
+
+                                    <span className=" text-[16px] font-normal text-[#677BFF] mt-1.5 flex flex-row ">Upload a fill <p className=" font-thin text-black " >or drag and drop</p> </span>
+                                    <h1 className="text-xs font-thin" >PNG,JPG,GIF up to 10 MB</h1>
+                                </label>
+                            </div>
+
+                            {/* Image Preview */}
+                            {preview && (
+                                <div className="mt-3">
+                                    <Image
+                                        src={preview}
+                                        width={100}
+                                        height={100}
+                                        alt="Logo Preview"
+                                        className="object-contain border rounded-md w-24 h-24"
+                                    />
+                                </div>
+                            )}
+
+
+                        </div>
+
+                        <label className="block  text-lg font-normal text-[#000000] mb-4 mt-4" htmlFor="">Detailed Explainer</label>
+
+                        <Editor
+
+                            value={editorValue}      // now always string
+                            onTextChange={handleEditorChange}
+                            style={{ height: "320px" }}
+                        />
 
                     </div>
 
-                    <label className="block  text-lg font-normal text-[#000000] mb-4 mt-4" htmlFor="">Detailed Explainer</label>
-
-                    <Editor
-                        value={editorValue}      // now always string
-                        onTextChange={handleEditorChange}
-                        style={{ height: "320px" }}
-                    />
-
-                </div>
 
 
+                    {/* Action Buttons */}
+                    <div className="flex justify-end space-x-4 mt-8">
+                        <button
+                            onClick={handleClose}
+                            className="flex items-center space-x-2 px-8 py-3 text-[#D09A40] rounded-[36px] border border-[#D09A40] transition"
+                        >
+                            <span>Cancel</span>
+                        </button>
+                        <button className=" cursor-pointer px-8 py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                            Save
+                        </button>
+                    </div>
+                </form>
 
-                {/* Action Buttons */}
-                <div className="flex justify-end space-x-4 mt-8">
-                    <button
-                        onClick={handleClose}
-                        className="flex items-center space-x-2 px-8 py-3 text-[#D09A40] rounded-[36px] border border-[#D09A40] transition"
-                    >
-                        <span>Cancel</span>
-                    </button>
-                    <button className="px-8 py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
-                        Save
-                    </button>
-                </div>
+
+
             </div>
         </>
     );
