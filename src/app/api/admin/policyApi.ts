@@ -40,9 +40,36 @@ export const policyApi = createApi({
                 body: formData
             }),
             invalidatesTags: ["policy"]
+        }),
+
+
+
+        singlePolicy: builder.query({
+            query: (policyId) => ({
+                url: `/admin/policies/${policyId}`,
+                method: "GET"
+            }),
+            providesTags: ["policy"]
+        }),
+
+        policyDelete: builder.mutation({
+            query: (slug) => ({
+                url: `/admin/policies/${slug}`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["policy"]
+        }),
+
+        policyUpdate: builder.mutation({
+            query: ({ policySlug, formData }) => ({
+                url: `/admin/policies/${policySlug}`,
+                method: "POST",
+                body: formData
+            }),
+            invalidatesTags: ["policy"]
         })
 
     }),
 });
 
-export const { useAllPolicyQuery, useCreatePolicyMutation } = policyApi;
+export const { useAllPolicyQuery, useCreatePolicyMutation, useSinglePolicyQuery, usePolicyDeleteMutation, usePolicyUpdateMutation } = policyApi;

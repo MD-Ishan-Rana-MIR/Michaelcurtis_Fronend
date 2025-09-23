@@ -1,10 +1,12 @@
+import { useSinglePolicyQuery } from "@/app/api/admin/policyApi";
+import { SinglePolicyApiResponseType } from "@/utility/types/admin/policy/policyType";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
 type PolicyViewProps = {
     policyViewModal: boolean;
     setPolicyViewModal: React.Dispatch<React.SetStateAction<boolean>>;
-    policyId: number | undefined
+    policyId: string | undefined
 };
 
 const PolicyView: React.FC<PolicyViewProps> = ({
@@ -74,9 +76,21 @@ const PolicyView: React.FC<PolicyViewProps> = ({
     const [active, setActive] = useState(true); // true = Active, false = Inactive
 
 
+    console.log(policyId)
+
+    const { data } = useSinglePolicyQuery(policyId);
 
 
 
+
+    const singlePolicy: SinglePolicyApiResponseType = data?.data
+
+
+    useEffect(() => {
+        if (data?.data.status) {
+            setActive(data?.data.status === "active"); // assuming API returns "active"/"inactive"
+        }
+    }, [singlePolicy, data?.data.status]);
 
 
 
@@ -118,15 +132,17 @@ const PolicyView: React.FC<PolicyViewProps> = ({
                 </button>
 
                 {/* Header */}
-                <div className="flex items-center h-24 w-40 gap-x-7">
+                <div className="flex items-center h-24 gap-x-7">
                     <Image
-                        src="/images/policy/car.svg"
+                        src={singlePolicy?.logo_url}
                         width={127}
                         height={45}
                         alt="Car"
                     />
                     <h1 className="text-center text-[#000000] text-4xl font-normal">
-                        Auto Insurance
+                        {
+                            singlePolicy?.name
+                        }
                     </h1>
                 </div>
 
@@ -158,26 +174,9 @@ const PolicyView: React.FC<PolicyViewProps> = ({
 
                 {/* Content */}
                 <div className="border border-[#989DA3] rounded-[9px] py-4 px-9 mt-7">
-                    <h1 className="text-3xl font-normal">What is Auto Insurance?</h1>
-                    <p className="text-lg font-thin mt-2">
-                        Auto insurance is a contract between you and an insurance company that protects you against financial loss in the event of an accident or theft. In exchange for your paying a premium, the insurance company agrees to pay your losses as outlined in your policy. It&apos;s designed to cover costs related to property damage, medical bills for injuries, and legal liabilities.
-                    </p>
-
-                    <h1 className="text-3xl font-normal mt-4">What&apos;s Covered (and What&apos;s Not)?</h1>
-                    <p className="text-lg font-thin mt-2">
-                        Standard auto policies are typically bundled with several types of coverage:
-                    </p>
-                    <ul className="font-thin list-disc ml-6 mt-2">
-                        <li>
-                            Liability Coverage: Pays for bodily injury and property damage you cause to others. This is required in most states.
-                        </li>
-                        <li>
-                            Collision Coverage: Pays for damage to your car resulting from a collision with another vehicle or object.
-                        </li>
-                        <li>
-                            Comprehensive Coverage: Covers damage to your car from non-collision events like theft, fire, or weather.
-                        </li>
-                    </ul>
+                    <div className="text-xl"
+                        dangerouslySetInnerHTML={{ __html: singlePolicy?.description || "" }}
+                    />
                 </div>
 
                 {/* Action Buttons */}
