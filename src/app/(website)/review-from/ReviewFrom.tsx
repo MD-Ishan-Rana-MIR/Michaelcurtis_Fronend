@@ -263,34 +263,32 @@ const ReviewFrom = () => {
 
 
 
-                    <div className=' flex flex-row justify-between items-center  ' >
-                        {/* Pros */}
+                    {/* <div className=' flex flex-row justify-between items-center  ' >
+                        
                         <div className=' lg:mt-9 mt-5  ' >
                             <h1 className=' mb-5 text-lg lg:text-[27px] font-normal text-[#000000] ' >Pros</h1>
                             <textarea
                                 id="message"
-                                // value={message}
-                                // onChange={(e) => setMessage(e.target.value)}
+                                
                                 placeholder="What went well?"
                                 rows={3}
                                 cols={40}
                                 className="w-full bg-[#E6FBDC]   border border-[#989DA3] rounded-lg px-6 py-3 text-gray-700 focus:outline-none placeholder:text-lg placeholder:font-thin  "
                             />
                         </div>
-                        {/* Cons */}
+                        
                         <div className=' lg:mt-9 mt-5  ' >
                             <h1 className=' mb-5 text-lg lg:text-[27px] font-normal text-[#000000] ' >Cons</h1>
                             <textarea
                                 id="message"
-                                // value={message}
-                                // onChange={(e) => setMessage(e.target.value)}
+                                
                                 placeholder="What could be improved?"
                                 rows={3}
                                 cols={40}
                                 className="w-full bg-[#FBE5DC]   border border-[#989DA3] rounded-lg px-6 py-3 text-gray-700 focus:outline-none placeholder:text-lg placeholder:font-thin  "
                             />
                         </div>
-                    </div>
+                    </div> */}
 
 
 

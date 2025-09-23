@@ -4,11 +4,13 @@ import React, { useEffect, useRef, useState } from "react";
 type PolicyViewProps = {
     policyViewModal: boolean;
     setPolicyViewModal: React.Dispatch<React.SetStateAction<boolean>>;
+    policyId: number | undefined
 };
 
 const PolicyView: React.FC<PolicyViewProps> = ({
     policyViewModal,
     setPolicyViewModal,
+    policyId
 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const firstFocusableRef = useRef<HTMLButtonElement>(null);
@@ -69,6 +71,26 @@ const PolicyView: React.FC<PolicyViewProps> = ({
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [policyViewModal, handleClose]);
 
+    const [active, setActive] = useState(true); // true = Active, false = Inactive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return (
         <>
             {/* Backdrop */}
@@ -111,58 +133,26 @@ const PolicyView: React.FC<PolicyViewProps> = ({
                 {/* Status Switch */}
                 <div className="mt-8 flex items-center gap-x-10">
                     <h1 className="text-lg font-normal text-[#000000]">Status</h1>
-                    <span className="cursor-pointer">
-                        <svg
-                            width="67"
-                            height="26"
-                            viewBox="0 0 67 26"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <g clipPath="url(#clip0_411_3415)">
-                                <rect width="67" height="26" rx="13" fill="#45E03C" />
-                                <g filter="url(#filter0_d_411_3415)">
-                                    <circle cx="52.5" cy="13.5" r="9.5" fill="white" />
-                                </g>
-                            </g>
-                            <defs>
-                                <filter
-                                    id="filter0_d_411_3415"
-                                    x="35.7"
-                                    y="-3.3"
-                                    width="33.6"
-                                    height="33.6"
-                                    filterUnits="userSpaceOnUse"
-                                    colorInterpolationFilters="sRGB"
-                                >
-                                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                                    <feColorMatrix
-                                        in="SourceAlpha"
-                                        type="matrix"
-                                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                                        result="hardAlpha"
-                                    />
-                                    <feOffset />
-                                    <feGaussianBlur stdDeviation="3.65" />
-                                    <feComposite in2="hardAlpha" operator="out" />
-                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                                    <feBlend
-                                        mode="normal"
-                                        in2="BackgroundImageFix"
-                                        result="effect1_dropShadow_411_3415"
-                                    />
-                                    <feBlend
-                                        mode="normal"
-                                        in="SourceGraphic"
-                                        in2="effect1_dropShadow_411_3415"
-                                        result="shape"
-                                    />
-                                </filter>
-                                <clipPath id="clip0_411_3415">
-                                    <rect width="67" height="26" rx="13" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
+                    <div
+                        onClick={() => {
+                            setActive(!active);
+
+                        }}
+                        className={`relative w-[67px] h-[26px] rounded-full cursor-pointer transition-colors ${active ? "bg-[#45E03C]" : "bg-gray-400"
+                            }`}
+                    >
+                        {/* Circle */}
+                        <div
+                            className={`absolute top-1/2 -translate-y-1/2 w-[19px] h-[19px] rounded-full bg-white shadow-md transition-all duration-300 ${active ? "right-1" : "left-1"
+                                }`}
+                        ></div>
+
+                    </div>
+                    <span
+                        className={`text-sm font-medium ${active ? "text-green-600" : "text-red-500"
+                            }`}
+                    >
+                        {active ? "active" : "inactive"}
                     </span>
                 </div>
 

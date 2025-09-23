@@ -117,13 +117,13 @@ const PolicyTopInsurance = () => {
 
                                             {/* Rating Text */}
 
-                                            <span className=" text-black font-thin lg:text-[16px] text-xs ml-2 ">((1,450))</span>
+                                            <span className=" text-black font-thin lg:text-[16px] text-xs ml-2 ">(1,450)</span>
                                         </div>
                                     </div>
 
                                     <div>
                                         <p className=' mt-4 lg:text-[16px] tex text-xs font-thin ' >
-                                            A top choice for drivers who value digital tools and competitive rates.
+                                            A top choice for drivers who value trust and competitive rates.
                                         </p>
                                     </div>
 

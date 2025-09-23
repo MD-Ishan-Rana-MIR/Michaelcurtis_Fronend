@@ -1,10 +1,10 @@
 import React from 'react'
-import OtpFrom from './OtpFrom'
+import AdminOtpFrom from './AdminOtpFrom'
 
 const Page = () => {
   return (
     <div>
-      <OtpFrom></OtpFrom>
+      <AdminOtpFrom />
     </div>
   )
 }

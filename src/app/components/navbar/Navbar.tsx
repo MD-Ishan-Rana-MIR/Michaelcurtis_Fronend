@@ -15,7 +15,7 @@ const Navbar = () => {
   const profileRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
-    { name: "Home", href: "/" },
+    // { name: "Home", href: "/" },
     { name: "Rankings", href: "/rankings" },
     { name: "Provider", href: "/providers" },
     { name: "Policies", href: "/policies" },
@@ -47,21 +47,22 @@ const Navbar = () => {
   }, [profileRef]);
 
   return (
-    <div className="sticky top-0 bg-white z-50 border-b-[2px]  ">
+    <div className="sticky top-0 bg-white z-50 border-b-[2px] py-2  ">
       <MaxWidth>
         <div className="flex items-center justify-between gap-x-7 py-1  ">
           {/* Logo */}
           <div >
             <Link className=" flex items-center " href={"/"}>
               <Image
-                src="/images/logo/home-logo.png"
+                src="/images/logo/logo-svg-1.svg"
                 alt="Logo"
-                width={120}
-                height={40}
-                className="object-contain lg:w-20 lg:h-20 w-10 h-10     "
+                width={316}
+                height={69}
+                className="object-contain      "
                 priority
               />
-              <h1 className="lg:ml-2 text-sm lg:text-xl font-bold text-center">CoverageGrader</h1></Link>
+              {/* <h1 className=" text-sm lg:text-[31px] font-bold text-center text-black ">CoverageGrader</h1> */}
+            </Link>
           </div>
 
           {/* Nav menu */}

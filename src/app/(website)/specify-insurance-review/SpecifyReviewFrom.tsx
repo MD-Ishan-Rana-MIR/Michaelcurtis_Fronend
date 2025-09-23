@@ -57,7 +57,7 @@ const SpecifyReviewFrom = () => {
                     <div className=' mt-2 ' >
                         <p className=' lg:text-xl text-sm font-thin ' >If you came from a provider’s page, this will be pre-filled.</p>
                     </div>
-              
+
 
 
 
@@ -254,35 +254,32 @@ const SpecifyReviewFrom = () => {
 
 
 
-
+                    {/* 
                     <div className=' flex flex-row justify-between items-center  ' >
-                        {/* Pros */}
+
                         <div className=' lg:mt-9 mt-5  ' >
                             <h1 className=' mb-5 text-lg lg:text-[27px] font-normal text-[#000000] ' >Pros</h1>
                             <textarea
                                 id="message"
-                                // value={message}
-                                // onChange={(e) => setMessage(e.target.value)}
+                                
                                 placeholder="What went well?"
                                 rows={3}
                                 cols={40}
                                 className="w-full bg-[#E6FBDC]   border border-[#989DA3] rounded-lg px-6 py-3 text-gray-700 focus:outline-none placeholder:text-lg placeholder:font-thin  "
                             />
                         </div>
-                        {/* Cons */}
                         <div className=' lg:mt-9 mt-5  ' >
                             <h1 className=' mb-5 text-lg lg:text-[27px] font-normal text-[#000000] ' >Cons</h1>
                             <textarea
                                 id="message"
-                                // value={message}
-                                // onChange={(e) => setMessage(e.target.value)}
+                                
                                 placeholder="What could be improved?"
                                 rows={3}
                                 cols={40}
                                 className="w-full bg-[#FBE5DC]   border border-[#989DA3] rounded-lg px-6 py-3 text-gray-700 focus:outline-none placeholder:text-lg placeholder:font-thin  "
                             />
                         </div>
-                    </div>
+                    </div> */}
 
 
 

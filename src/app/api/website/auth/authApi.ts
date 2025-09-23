@@ -1,15 +1,15 @@
 // redux/services/api.ts
-import { EmailVerifyApiPayload, EmailVerifyApiResponse, ForgetOtpVerifyApiResponse, LoginApiPayload, LoginApiResponse, NewPasswordSetApiPayload, NewPasswordSetApiRespone, OtpVerifyApiPayload, OtpVerifyApiResponse, OtpVeriryApiPayload, RegistrationApiPayload, RegistrationApiResponse } from "@/utility/types/authType";
+import { EmailVerifyApiPayload, EmailVerifyApiResponse, ForgetOtpVerifyApiResponse, LoginApiPayload, LoginApiResponse, NewPasswordSetApiPayload, NewPasswordSetApiRespone, OtpVerifyApiPayload, OtpVerifyApiResponse, OtpVeriryApiPayload, ProfileApiResponse, RegistrationApiPayload, RegistrationApiResponse } from "@/utility/types/authType";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
+import Cookies from "js-cookie";
 export const authApi = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
         prepareHeaders: (headers, { }) => {
             // Try to get tokens from localStorage
-            const userToken = typeof window !== "undefined" ? localStorage.getItem("user_token") : null;
-            const adminToken = typeof window !== "undefined" ? localStorage.getItem("admin_token") : null;
+            const adminToken = Cookies.get("admin_token");
+            const userToken = Cookies.get("user_token");
 
             if (adminToken) {
                 headers.set("Authorization", `Bearer ${adminToken}`);
@@ -20,6 +20,10 @@ export const authApi = createApi({
             return headers;
         },
     }),
+
+    tagTypes: ["Profile"], // 👈 Define tag types here
+
+
     endpoints: (builder) => ({
 
         // registrationApi
@@ -100,7 +104,34 @@ export const authApi = createApi({
         }),
 
 
+        adminProfile: builder.query<ProfileApiResponse, void>({
+            query: () => ({
+                url: `profile/me`,
+                method: "GET"
+            }),
+            providesTags: ["Profile"]
+        }),
+
+        profileUpdate: builder.mutation({
+            query: (payload) => ({
+                url: `profile/update`,
+                method: "POST",
+                body: payload
+            }),
+            invalidatesTags: ["Profile"],
+        }),
+
+        passwordUpdate: builder.mutation({
+            query: (payload) => ({
+                url: `auth/update-password`,
+                method: "POST",
+                body: payload
+            }),
+            invalidatesTags: ["Profile"]
+        })
+
+
     }),
 });
 
-export const { useRegistrationApiMutation, useOtpVerifyMutation, useResendOtpMutation, useLoginOtpMutation, useEmailVerifyMutation, useForgetOtpVerifyMutation, useNewPasswordSetApiMutation, useForgetResendOtpMutation } = authApi;
+export const { useRegistrationApiMutation, useOtpVerifyMutation, useResendOtpMutation, useLoginOtpMutation, useEmailVerifyMutation, useForgetOtpVerifyMutation, useNewPasswordSetApiMutation, useForgetResendOtpMutation, useAdminProfileQuery, useProfileUpdateMutation, usePasswordUpdateMutation } = authApi;

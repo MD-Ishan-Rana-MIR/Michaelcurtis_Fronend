@@ -1,5 +1,5 @@
 import React from 'react'
-import NewPasswordFrom from './NewPasswordFrom'
+import NewPasswordFrom from './AdminNewPasswordFrom'
 
 const Page: React.FC = () => {
     return (

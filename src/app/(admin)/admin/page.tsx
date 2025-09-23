@@ -1,12 +1,20 @@
 "use client"
 import ReviewChart from '@/app/pages/admin/ReviewChart'
 import WeekChart from '@/app/pages/admin/WeekChart'
-import React from 'react'
+import React, { useEffect } from 'react'
+import Cookies from "js-cookie";
 
 
 const Page: React.FC = () => {
   // Data for the chart
   // Define data type
+
+  useEffect(() => {
+    const adminToken = Cookies.get("admin_token"); // ✅ check inside useEffect
+    if (!adminToken) {
+      window.location.href = "/admin/login";
+    }
+  }, []);
 
 
 
