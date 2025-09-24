@@ -2,6 +2,7 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import { useBlogUpdateMutation } from '@/app/api/admin/blogApi';
 
 export const blogApi = createApi({
     reducerPath: "blogApi",
@@ -31,11 +32,39 @@ export const blogApi = createApi({
                 url: "/admin/blogs",
                 method: "POST",
                 body: payload
-            })
+            }),
+            invalidatesTags: ["blog"]
+        }),
+
+        allBlog: builder.query({
+            query: () => ({
+                url: "/admin/blogs/?include=user,policyCategories&sort=-created_at",
+                method: "GET"
+            }),
+            providesTags: ["blog"]
+        }),
+
+        singleBlog: builder.query({
+            query: (blogSlug) => ({
+                url: `/admin/blogs/${blogSlug}`,
+                method: "GET"
+            }),
+            providesTags: ["blog"]
+        }),
+
+
+        userBlogUpdate: builder.mutation({
+            query: ({ blogSlug, payload }) => ({
+                url: `/admin/blogs/${blogSlug}`,
+                method: "POST",
+                body: payload
+            }),
+            invalidatesTags: ["blog"]
         })
+
 
 
     }),
 });
 
-export const { useCreateBlogMutation } = blogApi;
+export const { useCreateBlogMutation, useAllBlogQuery, useSingleBlogQuery, useUserBlogUpdateMutation } = blogApi;

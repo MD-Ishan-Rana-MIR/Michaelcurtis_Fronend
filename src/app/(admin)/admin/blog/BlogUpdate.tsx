@@ -2,16 +2,23 @@
 import { Editor } from "primereact/editor";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { useBlogUpdateMutation, useSingleBlogQuery, useUserBlogUpdateMutation } from "@/app/api/admin/blogApi";
+import { useAllPolicyQuery } from "@/app/api/admin/policyApi";
+import { AllPolicyApiResponse } from "@/utility/types/admin/policy/policyType";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 
 type PolicyViewProps = {
     blogUpdate: boolean;
     setBlogUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+    blogSlug: string | null
 };
 
 const BlogUpdate: React.FC<PolicyViewProps> = ({
     blogUpdate,
     setBlogUpdate,
+    blogSlug
 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const firstFocusableRef = useRef<HTMLButtonElement>(null);
@@ -73,6 +80,36 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
     }, [blogUpdate, handleClose]);
 
 
+
+    const { data } = useSingleBlogQuery(blogSlug);
+
+    console.log(`policy_categories data is-------------`, data?.data?.policy_categories?.name);
+
+    const { data: policyResponse } = useAllPolicyQuery({});
+
+
+    const policyData: AllPolicyApiResponse[] = policyResponse?.data || [];
+
+
+
+
+    useEffect(() => {
+        if (data?.data) {
+            setTitle(data?.data?.title);
+            setAuthor(data?.data?.author_name);
+            setDescription(data?.data?.content);
+            setPreview(data?.data?.featured_image);
+            setCategory(data?.data?.policy_categories?.id)
+        }
+    }, [data]);
+
+    const [userBlogUpdate, { isLoading }] = useUserBlogUpdateMutation();
+
+
+
+
+
+
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [category, setCategory] = useState("");
@@ -87,11 +124,37 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        const payload = new FormData();
+        payload.append("category_id", category);
+        payload.append("title", title);
+        payload.append("author_name", author);
+        if (image) {
+            payload.append("featured_image", image)
+        }
+        payload.append("content", description);
+        payload.append("_method", "PUT");
         e.preventDefault();
-        // Submit logic here
-        console.log({ title, author, category, description, image });
+        try {
+
+            const res = await userBlogUpdate({ blogSlug, payload }).unwrap();
+
+            if (res) {
+                toast.success(res?.message)
+                handleClose();
+            }
+
+        } catch (err) {
+            console.log(err)
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
     };
+
+
+
 
 
 
@@ -131,7 +194,7 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
                 <div className="">
                     <h1 className="text-2xl font-semibold mb-6">Create Blog Post</h1>
                     <form
-                        onSubmit={handleSubmit}
+
                         className=" rounded-lg   "
                     >
                         {/* Post Title */}
@@ -162,20 +225,20 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
                             </div>
 
                             {/* Select Category */}
-                            <div className="w-full flex flex-col ">
-                                <label className="mb-3  text-xl font-normal">Select Category</label>
+                            <div className="w-full flex flex-col">
+                                <label className="mb-3 text-xl font-normal">Select Category</label>
                                 <select
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
-                                    className="px-4 py-2 border border-[#989DA3] rounded-[7px] focus:outline-none focus:ring-0  "
+                                    className="px-4 py-2 border border-[#989DA3] rounded-[7px] focus:outline-none focus:ring-0"
                                     required
                                 >
-                                    <option value="">-- Select Category --</option>
-                                    <option value="Pop">Pop</option>
-                                    <option value="Rock">Rock</option>
-                                    <option value="Jazz">Jazz</option>
-                                    <option value="Hip-Hop">Hip-Hop</option>
-                                    <option value="Classical">Classical</option>
+                                    {/* <option value="">-- Select Category --</option> */}
+                                    {policyData.map((cat) => (
+                                        <option key={cat?.id} value={cat?.id}>
+                                            {cat?.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -204,6 +267,8 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
                                 <Image
                                     src={preview}
                                     alt="Preview"
+                                    width={1000}
+                                    height={1000}
                                     className="mt-2 w-48 h-48 object-cover rounded"
                                 />
                             )}
@@ -223,8 +288,10 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
                     >
                         Cancel
                     </button>
-                    <button className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
-                        Save
+                    <button onClick={handleSubmit} className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                        {
+                            isLoading ? "Loading..." : "Save"
+                        }
                     </button>
                 </div>
             </div>

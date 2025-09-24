@@ -4,27 +4,24 @@ import React, { useState } from "react";
 import UploadBlog from "./UploadBlog";
 import BlogView from "./BlogView";
 import BlogUpdate from "./BlogUpdate";
-import { useRouter } from "next/navigation";
+import { useAllBlogQuery } from "@/app/api/admin/blogApi";
+import { BlogApiResponseType } from './../../../../utility/types/admin/blog/blogType';
+import { useAllPolicyQuery } from "@/app/api/admin/policyApi";
+import { AllPolicyApiResponse } from "@/utility/types/admin/policy/policyType";
 
-interface PostType {
-    id: number;
-    title: string;
-    author: string;
-    category: string;
-    date: string;
-    status: "Pending" | "Published" | "Rejected";
-}
 
-const initialPosts: PostType[] = [
-    { id: 1, title: "Song A", author: "John Doe", category: "Pop", date: "2025-09-10", status: "Pending" },
-    { id: 2, title: "Song B", author: "Jane Smith", category: "Rock", date: "2025-09-11", status: "Published" },
-    { id: 3, title: "Song C", author: "Mike Brown", category: "Jazz", date: "2025-09-12", status: "Rejected" },
-    { id: 4, title: "Song D", author: "Alice Green", category: "Hip-Hop", date: "2025-09-13", status: "Pending" },
-    { id: 5, title: "Song E", author: "Bob White", category: "Classical", date: "2025-09-14", status: "Published" },
-    { id: 6, title: "Song F", author: "Tom Black", category: "Pop", date: "2025-09-15", status: "Pending" },
-];
 
 export default function BlogList() {
+
+    const { data } = useAllBlogQuery({});
+
+    console.log("All blog is", data?.data);
+
+    const initialPosts: BlogApiResponseType[] = data?.data || [];
+
+
+
+
     const [search, setSearch] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("All Categories");
     const [statusFilter, setStatusFilter] = useState("All Status");
@@ -36,7 +33,7 @@ export default function BlogList() {
     // Filter logic
     const filteredPosts = initialPosts.filter((post) => {
         const matchesSearch = post.title.toLowerCase().includes(search.toLowerCase());
-        const matchesCategory = categoryFilter === "All Categories" ? true : post.category === categoryFilter;
+        const matchesCategory = categoryFilter === "All Categories" ? true : post.policy_categories?.name === categoryFilter;
         const matchesStatus = statusFilter === "All Status" ? true : post.status === statusFilter;
         return matchesSearch && matchesCategory && matchesStatus;
     });
@@ -63,10 +60,11 @@ export default function BlogList() {
 
     const [viewModal, setViewModal] = useState<boolean>(false);
 
-    const router = useRouter();
 
-    const handleBlogViewModal = (id: number) => {
-        router.push(`/admin/blog-details/${id}`)
+
+    const handleBlogViewModal = (slug: string) => {
+        setViewModal(true)
+        setBlogSlug(slug)
 
     }
 
@@ -75,11 +73,20 @@ export default function BlogList() {
 
 
     const [blogUpdate, setBlogUpdate] = useState<boolean>(false);
+    const [blogSlug, setBlogSlug] = useState<string | null>(null)
 
-    const handleBlogUpdate = () => {
-        setBlogUpdate(true)
+    const handleBlogUpdate = (slug: string) => {
+        setBlogUpdate(true);
+        setBlogSlug(slug)
+
     }
 
+
+    const { data: policyResponse } = useAllPolicyQuery({});
+
+    console.log(`policy data is-------------`, policyResponse?.data);
+
+    const policyData: AllPolicyApiResponse[] = policyResponse?.data || [];
 
 
 
@@ -131,11 +138,11 @@ export default function BlogList() {
                             className="px-4 py-2 border border-[#B9B9B9] text-[#686868] rounded w-[161px] focus:outline-none"
                         >
                             <option>All Categories</option>
-                            <option>Pop</option>
-                            <option>Rock</option>
-                            <option>Jazz</option>
-                            <option>Hip-Hop</option>
-                            <option>Classical</option>
+                            {policyData.map((cat, index) => (
+                                <option key={index} value={cat?.name}>
+                                    {cat.name}
+                                </option>
+                            ))}
                         </select>
 
                         <select
@@ -144,9 +151,8 @@ export default function BlogList() {
                             className="px-4 py-2 border border-[#B9B9B9] text-[#686868] rounded w-[141px] focus:outline-none"
                         >
                             <option>All Status</option>
-                            <option>Pending</option>
-                            <option>Published</option>
-                            <option>Rejected</option>
+                            <option>draft</option>
+                            <option>published</option>
                         </select>
 
                         <select
@@ -181,14 +187,14 @@ export default function BlogList() {
                             {paginatedPosts.length ? (
                                 paginatedPosts.map((post) => (
                                     <tr key={post.id}>
-                                        <td className="px-4 py-3">{post.title}</td>
-                                        <td className="px-4 py-3">{post.author}</td>
+                                        <td className="px-4 py-3">{post.title.slice(0, 20)}...</td>
+                                        <td className="px-4 py-3">{post.author_name}</td>
                                         <td className="px-4 py-3  ">
                                             <button className=" bg-[#F0C8E9] text-[#BA2DB1] py-1.5 px-3.5 rounded-[12px] " >
-                                                {post.category}
+                                                {post.policy_categories.name}
                                             </button>
                                         </td>
-                                        <td className="px-4 py-3">{post.date}</td>
+                                        <td className="px-4 py-3">{new Date(post?.created_at).toLocaleDateString()}</td>
                                         <td className="px-4 py-3">
                                             <span
                                                 className={`px-3.5  py-1.5 rounded-[12px]  ${post.status === "Pending"
@@ -202,7 +208,7 @@ export default function BlogList() {
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 flex gap-2 justify-center ">
-                                            <button onClick={() => { handleBlogViewModal(post?.id) }} className="px-2.5 py-1.5 border border-[#989DA3] rounded-[6px] cursor-pointer ">
+                                            <button onClick={() => { handleBlogViewModal(post?.slute) }} className="px-2.5 py-1.5 border border-[#989DA3] rounded-[6px] cursor-pointer ">
                                                 <span>
                                                     <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M2.275 12.296C1.425 11.192 1 10.639 1 9C1 7.36 1.425 6.809 2.275 5.704C3.972 3.5 6.818 1 11 1C15.182 1 18.028 3.5 19.725 5.704C20.575 6.81 21 7.361 21 9C21 10.64 20.575 11.191 19.725 12.296C18.028 14.5 15.182 17 11 17C6.818 17 3.972 14.5 2.275 12.296Z" stroke="#697079" />
@@ -211,7 +217,7 @@ export default function BlogList() {
 
                                                 </span>
                                             </button>
-                                            <button onClick={handleBlogUpdate} className="px-2.5 py-1.5 border border-[#989DA3] rounded-[6px]  cursor-pointer">
+                                            <button onClick={() => { handleBlogUpdate(post?.slute) }} className="px-2.5 py-1.5 border border-[#989DA3] rounded-[6px]  cursor-pointer">
                                                 <span>
                                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M7.533 9.15016C7.36388 9.31929 7.22976 9.5201 7.13831 9.74111C7.04685 9.96211 6.99985 10.199 7 10.4382V13.0002H9.578C10.061 13.0002 10.525 12.8082 10.867 12.4662L18.467 4.86216C18.6365 4.6931 18.7709 4.49227 18.8627 4.27117C18.9544 4.05006 19.0016 3.81304 19.0016 3.57366C19.0016 3.33428 18.9544 3.09725 18.8627 2.87615C18.7709 2.65505 18.6365 2.45422 18.467 2.28516L17.716 1.53416C17.5469 1.36454 17.346 1.22995 17.1248 1.13812C16.9036 1.04629 16.6665 0.999023 16.427 0.999023C16.1875 0.999023 15.9504 1.04629 15.7292 1.13812C15.508 1.22995 15.3071 1.36454 15.138 1.53416L7.533 9.15016Z" stroke="#697079" stroke-linecap="round" strokeLinejoin="round" />
@@ -283,14 +289,14 @@ export default function BlogList() {
             }
             {
                 viewModal && (
-                    <BlogView viewModal={viewModal} setViewModal={setViewModal} ></BlogView>
+                    <BlogView blogSlug={blogSlug} viewModal={viewModal} setViewModal={setViewModal} ></BlogView>
                 )
             }
 
 
             {
                 blogUpdate && (
-                    <BlogUpdate blogUpdate={blogUpdate} setBlogUpdate={setBlogUpdate} />
+                    <BlogUpdate blogSlug={blogSlug} blogUpdate={blogUpdate} setBlogUpdate={setBlogUpdate} />
                 )
 
             }
