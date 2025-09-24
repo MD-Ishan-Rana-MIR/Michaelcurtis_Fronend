@@ -2,6 +2,11 @@
 import { Editor } from "primereact/editor";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { useAllPolicyQuery } from "@/app/api/admin/policyApi";
+import { AllPolicyApiResponse } from "@/utility/types/admin/policy/policyType";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
+import { useCreateBlogMutation } from "@/app/api/admin/blogApi";
 
 
 type PolicyViewProps = {
@@ -80,6 +85,18 @@ const UploadBlog: React.FC<PolicyViewProps> = ({
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string>("");
 
+
+    // policy 
+
+    const { data } = useAllPolicyQuery({});
+
+    console.log(`policy data is-------------`, data?.data);
+
+    const policyData: AllPolicyApiResponse[] = data?.data || [];
+
+
+
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setImage(e.target.files[0]);
@@ -87,11 +104,41 @@ const UploadBlog: React.FC<PolicyViewProps> = ({
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [createBlog, { isLoading }] = useCreateBlogMutation()
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Submit logic here
-        console.log({ title, author, category, description, image });
+        const payload = new FormData();
+
+        payload.append("title", title);
+        payload.append("category_id", category);
+        payload.append("author_name", author);
+
+        if (image) {
+            payload.append("featured_image", image)
+        }
+
+        payload.append("content", description);
+
+
+        try {
+            const res = await createBlog(payload).unwrap();
+            if (res) {
+                toast.success(res?.message);
+                handleClose()
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+
+        }
+
+
+
     };
+
 
 
 
@@ -131,7 +178,7 @@ const UploadBlog: React.FC<PolicyViewProps> = ({
                 <div className="">
                     <h1 className="text-2xl font-semibold mb-6">Create Blog Post</h1>
                     <form
-                        onSubmit={handleSubmit}
+
                         className=" rounded-lg   "
                     >
                         {/* Post Title */}
@@ -162,22 +209,25 @@ const UploadBlog: React.FC<PolicyViewProps> = ({
                             </div>
 
                             {/* Select Category */}
-                            <div className="w-full flex flex-col ">
-                                <label className="mb-3  text-xl font-normal">Select Category</label>
+                            <div className="w-full flex flex-col">
+                                <label className="mb-3 text-xl font-normal">Select Category</label>
                                 <select
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
-                                    className="px-4 py-2 border border-[#989DA3] rounded-[7px] focus:outline-none focus:ring-0  "
+                                    className="px-4 py-2 border border-[#989DA3] rounded-[7px] focus:outline-none focus:ring-0"
                                     required
                                 >
                                     <option value="">-- Select Category --</option>
-                                    <option value="Pop">Pop</option>
-                                    <option value="Rock">Rock</option>
-                                    <option value="Jazz">Jazz</option>
-                                    <option value="Hip-Hop">Hip-Hop</option>
-                                    <option value="Classical">Classical</option>
+                                    {policyData.map((cat, index) => (
+                                        <option key={index} value={cat?.id}>
+                                            {cat.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
+
+
+
                         </div>
 
                         {/* Blog Description */}
@@ -204,6 +254,8 @@ const UploadBlog: React.FC<PolicyViewProps> = ({
                                 <Image
                                     src={preview}
                                     alt="Preview"
+                                    width={50}
+                                    height={50}
                                     className="mt-2 w-48 h-48 object-cover rounded"
                                 />
                             )}
@@ -223,8 +275,10 @@ const UploadBlog: React.FC<PolicyViewProps> = ({
                     >
                         Cancel
                     </button>
-                    <button className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
-                        Save
+                    <button onClick={handleSubmit} className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                        {
+                            isLoading ? "Loading..." : "Save"
+                        }
                     </button>
                 </div>
             </div>
