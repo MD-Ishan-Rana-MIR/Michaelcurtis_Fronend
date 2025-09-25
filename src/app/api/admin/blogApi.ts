@@ -60,6 +60,23 @@ export const blogApi = createApi({
                 body: payload
             }),
             invalidatesTags: ["blog"]
+        }),
+
+        blogStatusUpdate: builder.mutation({
+            query: ({ blogSlug, payload }) => ({
+                url: `/admin/blogs/${blogSlug}/status`,
+                method: "POST",
+                body: payload
+            }),
+            invalidatesTags: ["blog"]
+        }),
+
+        blogDelete: builder.mutation({
+            query: (slug) => ({
+                url: `/admin/blogs/${slug}`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["blog"]
         })
 
 
@@ -67,4 +84,4 @@ export const blogApi = createApi({
     }),
 });
 
-export const { useCreateBlogMutation, useAllBlogQuery, useSingleBlogQuery, useUserBlogUpdateMutation } = blogApi;
+export const { useCreateBlogMutation, useAllBlogQuery, useSingleBlogQuery, useUserBlogUpdateMutation, useBlogStatusUpdateMutation, useBlogDeleteMutation } = blogApi;

@@ -422,7 +422,7 @@ const RankingInsurance = () => {
                                         </div>
                                     </div>
 
-                                    <div className=' flex items-center gap-x-4  ' >
+                                    <div className=' flex items-center lg:gap-x-4  ' >
 
                                         <div className="flex flex-col space-y-1 ml-4 lg:ml-12 ">
                                             <span className=" px-5 py-2 bg-[#E9EAEB] rounded-[9px] font-normal text-sm lg:text-xl ">{item.claim}</span>
