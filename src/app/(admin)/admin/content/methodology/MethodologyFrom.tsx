@@ -1,8 +1,13 @@
 "use client";
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { Editor, EditorTextChangeEvent } from "primereact/editor";
 import { Button } from "primereact/button";
-
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
+import {
+    useGetMetholodgyContentQuery,
+    useMetholodgyContentCreateMutation,
+} from "@/app/api/admin/contentApi";
 
 // Define type for the form state
 type MethodologyFormState = {
@@ -14,18 +19,47 @@ const MethodologyForm: React.FC = () => {
         about: "",
     });
 
+    const [metholodgyContentCreate, { isLoading }] =
+        useMetholodgyContentCreateMutation();
+
     // Handle Editor change
     const handleEditorChange = (e: EditorTextChangeEvent) => {
         setFormData({ ...formData, about: e.htmlValue || "" });
     };
 
     // Handle form submission
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!formData.about.trim()) return;
-        console.log("Submitted:", formData.about);
-        alert("Submitted content:\n" + formData.about);
+
+        try {
+            const payload = {
+                type: "metholodgy",
+                content: formData.about,
+            };
+
+            const res = await metholodgyContentCreate(payload).unwrap();
+
+            if (res) {
+                toast.success(res?.message || "Saved successfully ✅");
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & {
+                data?: { message?: string };
+            };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
     };
+
+    // Fetch existing content
+    const { data } = useGetMetholodgyContentQuery({});
+
+    useEffect(() => {
+        if (data?.data?.content) {
+            setFormData({ about: data.data.content });
+        }
+    }, [data]);
 
     return (
         <div className="pb-10 pt-3.5 px-5 border border-[#B0B0B0] rounded-[14px]">
@@ -38,14 +72,14 @@ const MethodologyForm: React.FC = () => {
                     value={formData.about}
                     onTextChange={handleEditorChange}
                     style={{ height: "400px" }}
-                    placeholder="Write about yourself..."
+                    placeholder="Write about methodology..."
                 />
 
                 {/* Submit Button */}
                 <div className="flex justify-end gap-4 mt-16">
                     <Button
                         type="submit"
-                        label="Save"
+                        label={isLoading ? "Loading..." : "Save"}
                         icon="pi pi-check"
                         className="w-full border border-[#D1D1D1] bg-[#D09A40] py-3 font-bold text-sm text-white rounded-[8px]"
                     />
