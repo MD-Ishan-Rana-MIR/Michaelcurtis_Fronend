@@ -2,7 +2,6 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
-import { useBlogUpdateMutation } from '@/app/api/admin/blogApi';
 
 export const blogApi = createApi({
     reducerPath: "blogApi",

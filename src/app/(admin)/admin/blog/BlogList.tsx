@@ -100,7 +100,7 @@ export default function BlogList() {
     const [status, setStatus] = useState<string>();
 
 
-    const [blogStatusUpdate, { isLoading }] = useBlogStatusUpdateMutation();
+    const [blogStatusUpdate,] = useBlogStatusUpdateMutation();
 
 
 

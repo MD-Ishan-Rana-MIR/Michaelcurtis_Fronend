@@ -1,17 +1,23 @@
 "use client"
+import { useFaqUpdateMutation, useSingleFaqQuery } from "@/app/api/admin/faqApi";
+import { updateAlert } from "@/helper/updertAlert";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { Editor } from "primereact/editor";
 
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 
 type PolicyViewProps = {
     updateModal: boolean;
     setUpdateModal: React.Dispatch<React.SetStateAction<boolean>>;
+    faqId: number | null
 };
 
 const FaqUpdateModal: React.FC<PolicyViewProps> = ({
     updateModal,
     setUpdateModal,
+    faqId
 }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const firstFocusableRef = useRef<HTMLButtonElement>(null);
@@ -80,14 +86,67 @@ const FaqUpdateModal: React.FC<PolicyViewProps> = ({
 
 
 
-    const handleSubmit = (e: React.FormEvent) => {
+
+
+
+    // faq update 
+
+    const id = faqId;
+
+    const { data } = useSingleFaqQuery(id);
+
+    console.log(data)
+
+
+    useEffect(() => {
+        if (data) {
+            setTitle(data?.data?.question);
+            setDescription(data?.data?.answer);
+        }
+    }, [data]);
+
+
+    const [faqUpdate, { isLoading }] = useFaqUpdateMutation()
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Submit logic here
+
+        // const payload = {
+        //     question: title,
+        //     answer: description
+        // }
+        const payload = new FormData();
+
+        payload.append("question", title);
+        payload.append("answer", description);
+        payload.append("_method", "PUT")
+
+        if (id === null) {
+            toast.error("FAQ ID is missing.");
+            return;
+        }
+
+        try {
+
+            const res = await updateAlert();
+
+            if (res?.isConfirmed) {
+                const res = await faqUpdate({ id, payload }).unwrap();
+                if (res) {
+                    toast.success(res?.message)
+                }
+            }
+
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
 
     };
-
-
-
 
 
 
@@ -123,7 +182,7 @@ const FaqUpdateModal: React.FC<PolicyViewProps> = ({
 
                 <div className="">
                     <form
-                        onSubmit={handleSubmit}
+
                         className=" rounded-lg   "
                     >
                         {/* Post Title */}
@@ -134,7 +193,7 @@ const FaqUpdateModal: React.FC<PolicyViewProps> = ({
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 className="px-4 py-2 border border-[#989DA3] rounded-[7px] focus:outline-none focus:ring-0 "
-                                // placeholder="Enter post title"
+
                                 required
                             />
                         </div>
@@ -168,8 +227,10 @@ const FaqUpdateModal: React.FC<PolicyViewProps> = ({
                     >
                         Cancel
                     </button>
-                    <button className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
-                        Save
+                    <button onClick={handleSubmit} className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                        {
+                            isLoading ? "Loading..." : 'Save'
+                        }
                     </button>
                 </div>
             </div>

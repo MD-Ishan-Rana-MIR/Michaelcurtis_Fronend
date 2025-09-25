@@ -2,7 +2,7 @@
 import { Editor } from "primereact/editor";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { useBlogUpdateMutation, useSingleBlogQuery, useUserBlogUpdateMutation } from "@/app/api/admin/blogApi";
+import { useSingleBlogQuery, useUserBlogUpdateMutation } from "@/app/api/admin/blogApi";
 import { useAllPolicyQuery } from "@/app/api/admin/policyApi";
 import { AllPolicyApiResponse } from "@/utility/types/admin/policy/policyType";
 import { toast } from "sonner";
