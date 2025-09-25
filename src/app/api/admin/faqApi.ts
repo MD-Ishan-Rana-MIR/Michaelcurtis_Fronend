@@ -1,6 +1,6 @@
 // redux/services/api.ts
 
-import { FaqCreateApiResponseType, FaqCreatePayloadType, FaqDeleteApiPayloadType, FaqDeleteApiResponseType, FaqUpdateApiPayloadType, FaqUpdateApiResponseType } from "@/utility/types/admin/faq/faqType";
+import { FaqCreateApiResponseType, FaqCreatePayloadType, FaqDeleteApiPayloadType, FaqDeleteApiResponseType } from "@/utility/types/admin/faq/faqType";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 

@@ -34,7 +34,7 @@ const FaqList = () => {
 
     // faq list 
 
-    const { data, isLoading } = useAllFaqQuery({});
+    const { data } = useAllFaqQuery({});
 
 
 
