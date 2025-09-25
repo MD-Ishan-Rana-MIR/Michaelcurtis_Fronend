@@ -65,6 +65,53 @@ export const contentApi = createApi({
         }),
 
 
+        // privacy 
+
+
+
+        privacyContentCreate: builder.mutation({
+            query: (formData) => ({
+                url: `/admin/pages`,
+                method: "POST",
+                body: formData
+            }),
+            invalidatesTags: ["content"]
+        }),
+
+        getPrivacyContent: builder.query({
+            query: () => ({
+                url: `/admin/pages/privacy`,
+                method: "GET"
+            }),
+            providesTags: ["content"]
+        }),
+
+
+        // privacy 
+
+
+
+        termsContentCreate: builder.mutation({
+            query: (formData) => ({
+                url: `/admin/pages`,
+                method: "POST",
+                body: formData
+            }),
+            invalidatesTags: ["content"]
+        }),
+
+        getTermsContent: builder.query({
+            query: () => ({
+                url: `/admin/pages/privacy`,
+                method: "GET"
+            }),
+            providesTags: ["content"]
+        }),
+
+
+
+
+
 
 
 
@@ -73,4 +120,4 @@ export const contentApi = createApi({
     }),
 });
 
-export const { useAboutContentCreateMutation, useGetAboutContentQuery, useMetholodgyContentCreateMutation, useGetMetholodgyContentQuery } = contentApi;
+export const { useAboutContentCreateMutation, useGetAboutContentQuery, useMetholodgyContentCreateMutation, useGetMetholodgyContentQuery, usePrivacyContentCreateMutation, useGetPrivacyContentQuery, useTermsContentCreateMutation, useGetTermsContentQuery } = contentApi;
