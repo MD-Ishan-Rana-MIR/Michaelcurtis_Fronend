@@ -4,10 +4,14 @@ import React, { useState } from "react";
 import UploadBlog from "./UploadBlog";
 import BlogView from "./BlogView";
 import BlogUpdate from "./BlogUpdate";
-import { useAllBlogQuery } from "@/app/api/admin/blogApi";
+import { useAllBlogQuery, useBlogDeleteMutation, useBlogStatusUpdateMutation } from "@/app/api/admin/blogApi";
 import { BlogApiResponseType } from './../../../../utility/types/admin/blog/blogType';
 import { useAllPolicyQuery } from "@/app/api/admin/policyApi";
 import { AllPolicyApiResponse } from "@/utility/types/admin/policy/policyType";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
+import { updateAlert } from "@/helper/updertAlert";
+import { deleteAlert } from "@/helper/deleteAlert";
 
 
 
@@ -89,6 +93,86 @@ export default function BlogList() {
     const policyData: AllPolicyApiResponse[] = policyResponse?.data || [];
 
 
+    // blog status update 
+
+    const [statusModal, setStatusModal] = useState<boolean>(false);
+
+    const [status, setStatus] = useState<string>();
+
+
+    const [blogStatusUpdate, { isLoading }] = useBlogStatusUpdateMutation();
+
+
+
+    const handleStatusModal = (slug: string) => {
+        setBlogSlug(slug)
+        setStatusModal(true)
+    }
+
+
+    const statusModalClose = () => {
+        setStatusModal(false)
+    }
+
+
+    const handleUpdateStatus = async () => {
+        const payload = new FormData();
+        if (typeof status === "string") {
+            payload.append("status", status);
+        } else {
+            toast.error("Please select a status.");
+            return;
+        }
+
+        payload.append("_method", "PUT");
+
+
+        try {
+
+            const res = await updateAlert();
+
+            if (res?.isConfirmed) {
+                const res = await blogStatusUpdate({ blogSlug, payload }).unwrap();
+                if (res) {
+                    toast.success(res?.message);
+                    statusModalClose();
+                }
+            }
+
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    }
+
+
+
+    // blog delete 
+
+
+    const [blogDelete] = useBlogDeleteMutation();
+
+
+    const handleBlogDelete = async (slug: string) => {
+        try {
+
+            const res = await deleteAlert();
+
+            if (res?.isConfirmed) {
+                const res = await blogDelete(slug).unwrap();
+                if (res) {
+                    toast.success(res?.message)
+                }
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
+    }
 
 
 
@@ -197,9 +281,10 @@ export default function BlogList() {
                                         <td className="px-4 py-3">{new Date(post?.created_at).toLocaleDateString()}</td>
                                         <td className="px-4 py-3">
                                             <span
-                                                className={`px-3.5  py-1.5 rounded-[12px]  ${post.status === "Pending"
+                                                onClick={() => { handleStatusModal(post?.slute) }}
+                                                className={`px-3.5 cursor-pointer py-1.5 rounded-[12px]  ${post.status === "draft"
                                                     ? "bg-yellow-100 text-yellow-800"
-                                                    : post.status === "Published"
+                                                    : post.status === "published"
                                                         ? "text-[#31BA2D] bg-[#DAF0C8]"
                                                         : "bg-red-100 text-red-800"
                                                     }`}
@@ -226,7 +311,7 @@ export default function BlogList() {
 
                                                 </span>
                                             </button>
-                                            <button className=" px-2.5 py-1.5 border border-[#E04F4F] rounded-[6px]  cursor-pointer">
+                                            <button onClick={() => { handleBlogDelete(post?.slute) }} className=" px-2.5 py-1.5 border border-[#E04F4F] rounded-[6px]  cursor-pointer">
                                                 <span>
                                                     <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M2.61601 16.0005C2.17134 16.0005 1.79101 15.8421 1.47501 15.5255C1.15901 15.2088 1.00067 14.8291 1.00001 14.3865V2.00047H0.500007C0.358007 2.00047 0.23934 1.95247 0.144007 1.85647C0.0486736 1.76047 0.000673516 1.64147 6.84931e-06 1.49947C-0.000659817 1.35747 0.0473402 1.2388 0.144007 1.14347C0.240674 1.04814 0.35934 1.00047 0.500007 1.00047H4.00001C4.00001 0.793802 4.07667 0.613802 4.23001 0.460469C4.38334 0.307135 4.56334 0.230469 4.77001 0.230469H9.23001C9.43667 0.230469 9.61667 0.307135 9.77001 0.460469C9.92334 0.613802 10 0.793802 10 1.00047H13.5C13.642 1.00047 13.7607 1.04847 13.856 1.14447C13.9513 1.24047 13.9993 1.35947 14 1.50147C14.0007 1.64347 13.9527 1.76214 13.856 1.85747C13.7593 1.9528 13.6407 2.00047 13.5 2.00047H13V14.3855C13 14.8295 12.8417 15.2095 12.525 15.5255C12.2083 15.8415 11.8283 15.9998 11.385 16.0005H2.61601ZM12 2.00047H2.00001V14.3855C2.00001 14.5648 2.05767 14.7121 2.17301 14.8275C2.28834 14.9428 2.43601 15.0005 2.61601 15.0005H11.385C11.5643 15.0005 11.7117 14.9428 11.827 14.8275C11.9423 14.7121 12 14.5648 12 14.3855V2.00047ZM5.30801 13.0005C5.45001 13.0005 5.56901 12.9525 5.66501 12.8565C5.76101 12.7605 5.80867 12.6418 5.80801 12.5005V4.50047C5.80801 4.35847 5.76001 4.2398 5.66401 4.14447C5.56801 4.04914 5.44901 4.00114 5.30701 4.00047C5.16501 3.9998 5.04634 4.0478 4.95101 4.14447C4.85567 4.24114 4.80801 4.3598 4.80801 4.50047V12.5005C4.80801 12.6425 4.85601 12.7611 4.95201 12.8565C5.04801 12.9525 5.16667 13.0005 5.30801 13.0005ZM8.69301 13.0005C8.83501 13.0005 8.95367 12.9525 9.04901 12.8565C9.14434 12.7605 9.19201 12.6418 9.19201 12.5005V4.50047C9.19201 4.35847 9.14401 4.2398 9.04801 4.14447C8.95201 4.04847 8.83334 4.00047 8.69201 4.00047C8.55001 4.00047 8.43101 4.04847 8.33501 4.14447C8.23901 4.24047 8.19134 4.35914 8.19201 4.50047V12.5005C8.19201 12.6425 8.24001 12.7611 8.33601 12.8565C8.43201 12.9518 8.55101 12.9998 8.69301 13.0005Z" fill="#E04F4F" />
@@ -281,17 +366,21 @@ export default function BlogList() {
                     </button>
                 </div>
             )}
+            {/* blog create modal  */}
             {
                 openPostModal && (
                     <UploadBlog openPostModal={openPostModal} setOpenPostModal={setOpenPostModal} />
                 )
 
             }
+            {/* blog details modal  */}
             {
                 viewModal && (
                     <BlogView blogSlug={blogSlug} viewModal={viewModal} setViewModal={setViewModal} ></BlogView>
                 )
             }
+
+            {/* blog update modal  */}
 
 
             {
@@ -300,6 +389,52 @@ export default function BlogList() {
                 )
 
             }
+
+
+            {/* blog status update modal  */}
+
+            {/* Modal */}
+
+            {statusModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-80">
+                        <h2 className="text-lg font-semibold mb-4">Change Status</h2>
+
+                        {/* Dropdown */}
+                        <select
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="w-full border rounded-md p-2"
+                        >
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
+
+                        {/* Actions */}
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button
+                                onClick={statusModalClose}
+
+                                className=" cursor-pointer px-6 py-3 rounded-[26px] border border-[#D09A40] "
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleUpdateStatus}
+                                className=" cursor-pointer px-6 rounded-[26px] text-white py-3  bg-[#D09A40]  "
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
+
         </>
     );
 }

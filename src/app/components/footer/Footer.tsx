@@ -14,7 +14,7 @@ export default function Footer() {
 
     return (
         <div>
-            <footer className=" border-t border-[#989DA3] ">
+            <footer className=" ">
                 <MaxWidth>
                     <div className="flex flex-wrap justify-between gap-x-8 pt-10 ">
 

@@ -14,7 +14,7 @@ export type ScoreKey =
     | "Service"
     | "Pricing"
     | "Coverage"
-    | "Transparency & Trust";
+    | "Trust";
 
 export type Insurer = {
     id: number;
@@ -36,7 +36,7 @@ const metricColors: Record<ScoreKey, string> = {
     Service: "bg-cyan-500",
     Pricing: "bg-amber-500",
     Coverage: "bg-fuchsia-500",
-    "Transparency & Trust": "bg-orange-500",
+    "Trust": "bg-orange-500",
 };
 
 function Meter({ value, colorClass }: { value: number; colorClass: string }) {
@@ -67,7 +67,7 @@ export function InsuranceCard({ data }: { data: Insurer }) {
         { label: "Service", value: data.service },
         { label: "Pricing", value: data.pricing },
         { label: "Coverage", value: data.coverage },
-        { label: "Transparency & Trust", value: data.digitalTools },
+        { label: "Trust", value: data.digitalTools },
     ];
 
 

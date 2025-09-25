@@ -7,6 +7,7 @@ import { useAllPolicyQuery } from "@/app/api/admin/policyApi";
 import { AllPolicyApiResponse } from "@/utility/types/admin/policy/policyType";
 import { toast } from "sonner";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { updateAlert } from "@/helper/updertAlert";
 
 
 type PolicyViewProps = {
@@ -137,11 +138,14 @@ const BlogUpdate: React.FC<PolicyViewProps> = ({
         e.preventDefault();
         try {
 
-            const res = await userBlogUpdate({ blogSlug, payload }).unwrap();
+            const res = await updateAlert();
+            if (res?.isConfirmed) {
+                const res = await userBlogUpdate({ blogSlug, payload }).unwrap();
 
-            if (res) {
-                toast.success(res?.message)
-                handleClose();
+                if (res) {
+                    toast.success(res?.message)
+                    handleClose();
+                }
             }
 
         } catch (err) {
