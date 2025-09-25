@@ -1,7 +1,10 @@
 "use client"
+import { useCreateFaqMutation } from "@/app/api/admin/faqApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { Editor } from "primereact/editor";
 
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 
 type PolicyViewProps = {
@@ -78,12 +81,29 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
 
     const [description, setDescription] = useState("");
 
+    const [createFaq, { isLoading }] = useCreateFaqMutation();
 
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Submit logic here
-
+        const payload = {
+            question: title,
+            answer: description,
+            is_active: 1,
+        };
+        try {
+            const res = await createFaq(payload).unwrap();
+            if (res) {
+                toast.success(res?.message);
+                setDescription("");
+                setTitle("");
+                handleClose();
+            }
+        } catch (err) {
+            const error = err as FetchBaseQueryError & { data?: { message?: string } };
+            const message =
+                (error.data?.message as string) || "Something went wrong ❌";
+            toast.error(message);
+        }
     };
 
 
@@ -123,7 +143,6 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
 
                 <div className="">
                     <form
-                        onSubmit={handleSubmit}
                         className=" rounded-lg   "
                     >
                         {/* Post Title */}
@@ -168,8 +187,10 @@ const FaqCreateFrom: React.FC<PolicyViewProps> = ({
                     >
                         Cancel
                     </button>
-                    <button className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
-                        Save
+                    <button onClick={handleSubmit} className="px-8 cursor-pointer py-3 bg-[#D09A40] text-white rounded-[36px] hover:bg-[#b8802f] transition">
+                        {
+                            isLoading ? "Loading..." : "Save"
+                        }
                     </button>
                 </div>
             </div>
